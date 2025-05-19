@@ -31,7 +31,6 @@ export default function StartScreen() {
   );
 }
 
-// 🎨 Style definitions
 const styles = {
   container: {
     backgroundColor: "#0e1450",

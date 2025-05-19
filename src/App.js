@@ -1,8 +1,9 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import StartScreen from './screens/StartScreen';
-import Exposition from './screens/Exposition';
-import GameContainer from './components/GameContainer';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import StartScreen from "./screens/StartScreen";
+import Exposition from "./screens/Exposition";
+import KitchenRoom from "./screens/KitchenRoom";
+import GameContainer from "./components/GameContainer";
 
 function App() {
   return (
@@ -21,6 +22,14 @@ function App() {
           element={
             <GameContainer>
               <Exposition />
+            </GameContainer>
+          }
+        />
+        <Route
+          path="/kitchen-room"
+          element={
+            <GameContainer>
+              <KitchenRoom />
             </GameContainer>
           }
         />
