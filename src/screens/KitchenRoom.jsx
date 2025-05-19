@@ -15,6 +15,8 @@ export default function KitchenRoom() {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+  const [userGuess, setUserGuess] = useState("");
+  const [feedback, setFeedback] = useState("");
 
   return (
     <div style={styles.container}>
@@ -42,8 +44,46 @@ export default function KitchenRoom() {
             <input
               type="text"
               placeholder="Recipe 1 Code:"
+              value={userGuess}
+              onChange={(e) => setUserGuess(e.target.value)}
               style={styles.input}
             />
+            <button
+              onClick={() => {
+                const correctWords = [
+                  "red",
+                  "velvet",
+                  "cupcake",
+                  "protein",
+                  "bar",
+                ];
+                const userWords = userGuess.trim().toLowerCase().split(/\s+/);
+                const missingWords = correctWords.filter(
+                  (word) => !userWords.includes(word)
+                );
+
+                if (
+                  userWords.length === correctWords.length &&
+                  missingWords.length === 0
+                ) {
+                  setFeedback("success");
+                } else {
+                  setFeedback(`close:${missingWords.length}`);
+                }
+              }}
+              style={styles.submitButton}
+            >
+              Submit
+            </button>
+            {feedback === "success" && (
+              <div style={styles.feedbackSuccess}>Success!</div>
+            )}
+            {feedback.startsWith("close:") && (
+              <div style={styles.feedbackClose}>
+                Close! You are wrong about {feedback.split(":")[1]} word(s).
+              </div>
+            )}
+
             <button onClick={handleCloseModal} style={styles.closeButton}>
               Close
             </button>
@@ -114,6 +154,44 @@ const styles = {
     borderRadius: "5px",
     zIndex: 12,
   },
+  feedbackSuccess: {
+    position: "absolute",
+    top: 20,
+    left: "50%",
+    transform: "translateX(-50%)",
+    fontSize: "2rem",
+    color: "#5E68F8",
+    backgroundColor: "white",
+    padding: "0.5rem 1rem",
+    borderRadius: "10px",
+    zIndex: 20,
+  },
+
+  feedbackClose: {
+    position: "absolute",
+    top: 20,
+    left: "50%",
+    transform: "translateX(-50%)",
+    fontSize: "1.5rem",
+    color: "#f44336",
+    backgroundColor: "white",
+    padding: "0.4rem 1rem",
+    borderRadius: "10px",
+    zIndex: 20,
+  },
+
+  submitButton: {
+    position: "absolute",
+    bottom: "20%",
+    padding: "1rem 3rem",
+    backgroundColor: "#5E68F8",
+    color: "#fff",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    zIndex: 12,
+  },
+
   closeButton: {
     position: "absolute",
     bottom: "10%",
