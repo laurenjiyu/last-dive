@@ -11,7 +11,8 @@ export default function StartScreen() {
         <h1 style={styles.title}>LAST DIVE</h1>
         <div style={styles.subtitleSection}>
           <p style={styles.subtitle}>
-            a digital escape room by adi, anthony, lauren, nhu, and yinlin
+            a digital escape room by adi, anthony, lauren, nhu, maimuna, and
+            yinlin
           </p>
           <p style={styles.course}>CS 247G</p>
         </div>
