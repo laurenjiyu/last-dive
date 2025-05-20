@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# Red Reveal Puzzle Creator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project contains several HTML files that implement "red reveal" puzzles - a type of puzzle that uses color properties to hide and reveal text.
 
-## Available Scripts
+## How Red Reveal Puzzles Work
 
-In the project directory, you can run:
+Red reveal puzzles work based on the following principles:
 
-### `npm start`
+1. Hidden text is written in cyan (blue-green) color
+2. The text is camouflaged with "noise" in red, pink, and yellow colors
+3. When viewed through a red filter, the cyan text appears dark while the red/pink/yellow noise blends with the filter
+4. This makes the hidden text visible through the filter!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+The science behind this is:
+- Red filters block blue and green light
+- Cyan is a combination of blue and green (with no red)
+- When viewed through a red filter, cyan appears black
+- Red, yellow and pink contain red components, so they appear more transparent through the filter
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Files Included
 
-### `npm test`
+This project includes three different HTML files for creating and using red reveal puzzles:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **red-reveal.html**: A basic implementation of a red reveal puzzle that hides the word "RED"
+2. **red-reveal-interactive.html**: An interactive version that lets you create your own puzzles
+3. **red-reveal-printable.html**: A printable version with a red filter template included
 
-### `npm run build`
+## How to Use
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Basic Version (red-reveal.html)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. Open the file in a web browser
+2. Look at the puzzle - can you see the hidden word?
+3. Use a red filter (like a piece of red cellophane or red plastic) over the puzzle to reveal the hidden word
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Interactive Version (red-reveal-interactive.html)
 
-### `npm run eject`
+1. Open the file in a web browser
+2. Read the instructions to understand how the puzzle works
+3. Look at the example puzzle
+4. Click "Simulate Red Filter" to see how the puzzle would look through a red filter
+5. Enter your own word or phrase in the "Create Your Own Puzzle" section
+6. Click "Generate Puzzle" to create a custom puzzle with your hidden text
+7. Use the filter simulation to reveal your hidden word
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Printable Version (red-reveal-printable.html)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Open the file in a web browser
+2. Click the "Print Puzzle and Filter" button
+3. After printing, cut out the red filter template along the dashed line
+4. Hold the filter over the puzzle to reveal the hidden word
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## DIY Red Filter Ideas
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+If you don't have a red filter, you can try one of these alternatives:
 
-## Learn More
+- Red cellophane or plastic wrap
+- Red transparent folder or document sleeve
+- Red plastic report cover
+- Red sunglasses
+- Red plastic party cup (flattened)
+- Red candy wrapper
+- Red transparent plastic toy
+- Red highlighter on a clear plastic sheet
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The more transparent and red the material is, the better the effect will be!
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Science and Educational Value
 
-### Code Splitting
+Red reveal puzzles provide a fun way to explore color theory and how our eyes perceive different colors. They demonstrate how:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Colors are created by reflecting specific wavelengths of light
+- Filters work by blocking certain wavelengths
+- The RGB (Red, Green, Blue) color model works
+- Complementary colors interact
 
-### Analyzing the Bundle Size
+This makes them excellent educational tools for teaching color theory, optics, and visual perception.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Technical Implementation
 
-### Making a Progressive Web App
+These puzzles are implemented using HTML, CSS, and JavaScript. The key technical aspects include:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Using CSS to set text colors for the hidden words (cyan) and noise characters (red, pink, and yellow)
+- Creating a simulated filter effect using a semi-transparent red overlay
+- Dynamically generating puzzles from user input
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Feel free to examine the source code to understand how these puzzles are implemented and modify them for your own purposes!
