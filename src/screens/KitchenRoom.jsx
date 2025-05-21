@@ -17,6 +17,29 @@ export default function KitchenRoom() {
   };
   const [userGuess, setUserGuess] = useState("");
   const [feedback, setFeedback] = useState("");
+  const [wordInputs, setWordInputs] = useState(["", "", "", "", ""]);
+
+  const handleWordChange = (index, value) => {
+    const newInputs = [...wordInputs];
+    newInputs[index] = value.toLowerCase();
+    setWordInputs(newInputs);
+  };
+
+  const correctWords = ["red", "velvet", "cupcake", "protein", "bar"];
+
+  const checkWords = () => {
+    const incorrectIndices = correctWords
+      .map((word, i) => (wordInputs[i] !== word ? i : null))
+      .filter((i) => i !== null);
+
+    if (incorrectIndices.length === 0) {
+      setFeedback("success");
+    } else {
+      const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
+      const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
+      setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
+    }
+  };
 
   return (
     <div style={styles.container}>
@@ -32,55 +55,38 @@ export default function KitchenRoom() {
       {/* Recipe Book when clicked on */}
       {modalOpen && (
         <div style={styles.modalOverlay} onClick={handleCloseModal}>
-          <div
-            style={styles.modalContent}
-            onClick={(e) => e.stopPropagation()} // prevent modal from closing on inner click
-          >
+          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <img
               src="/assets/openbook.jpg"
               alt="Open Book"
               style={styles.modalImage}
             />
-            <input
-              type="text"
-              placeholder="Recipe 1 Code:"
-              value={userGuess}
-              onChange={(e) => setUserGuess(e.target.value)}
-              style={styles.input}
-            />
-            <button
-              onClick={() => {
-                const correctWords = [
-                  "red",
-                  "velvet",
-                  "cupcake",
-                  "protein",
-                  "bar",
-                ];
-                const userWords = userGuess.trim().toLowerCase().split(/\s+/);
-                const missingWords = correctWords.filter(
-                  (word) => !userWords.includes(word)
-                );
 
-                if (
-                  userWords.length === correctWords.length &&
-                  missingWords.length === 0
-                ) {
-                  setFeedback("success");
-                } else {
-                  setFeedback(`close:${missingWords.length}`);
-                }
-              }}
-              style={styles.submitButton}
-            >
+            <div style={styles.inputContainer}>
+              {correctWords.map((_, i) => (
+                <input
+                  key={i}
+                  type="text"
+                  placeholder={`Word ${i + 1}`}
+                  value={wordInputs[i]}
+                  onChange={(e) => handleWordChange(i, e.target.value)}
+                  style={{ ...styles.input, marginBottom: "0.5rem" }}
+                />
+              ))}
+            </div>
+
+            <button onClick={checkWords} style={styles.submitButton}>
               Submit
             </button>
+
             {feedback === "success" && (
               <div style={styles.feedbackSuccess}>Success!</div>
             )}
-            {feedback.startsWith("close:") && (
+            {feedback.startsWith("incorrect:") && (
               <div style={styles.feedbackClose}>
-                Close! You are wrong about {feedback.split(":")[1]} word(s).
+                Your <strong>{feedback.split(":")[1]}</strong> word
+                {feedback.split(":")[1].includes(",") ? "s are" : " is"}{" "}
+                incorrect.
               </div>
             )}
 
@@ -138,22 +144,30 @@ const styles = {
     alignItems: "center",
   },
   modalImage: {
-    width: "400px",
+    width: "800px",
     height: "auto",
     objectFit: "contain",
     borderRadius: "10px",
     zIndex: 11,
   },
-  //Recipe Book Modal input text for guesses
-  input: {
+  inputContainer: {
     position: "absolute",
     top: "40%",
-    width: "60%",
+    zIndex: 12,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: "0.5rem",
+  },
+
+  //Recipe Book Modal input text for guesses
+  input: {
+    width: "100px",
     padding: "0.5rem",
     border: "4px solid #5E68F8",
     borderRadius: "5px",
-    zIndex: 12,
   },
+
   feedbackSuccess: {
     position: "absolute",
     top: 20,
