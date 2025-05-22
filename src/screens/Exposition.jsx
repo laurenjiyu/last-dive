@@ -8,6 +8,7 @@ export default function Exposition() {
   const [background, setBackground] = useState('url("/assets/exposition.png")');
   const [showAlert, setShowAlert] = useState(false);
   const [showVillain, setShowVillain] = useState(false);
+  const [showBlackScreen, setShowBlackScreen] = useState(false);
 
   const texts = [
     "You've won an all-expenses-paid trip aboard SeaGate, the world's most extravagant deep-sea luxury submarine cruise.",
@@ -27,6 +28,7 @@ export default function Exposition() {
     "So. Let's play a game. The escape pod is locked. I'm the only one who knows the code. And in 30 MINUTES, I'm leaving.\nAlone.",
     "Every room? A challenge. A love letter to me. Something you failed to care about. Solve them, or sink trying.",
     "YOU MIGHT HAVE SURVIVED THE PRESSURE.\nBUT YOU COULDN'T SURVIVE ME.",
+    "Everyone is frantically running, you join them, until...\n\nYou see an open room",
   ];
 
   const handleNextClick = () => {
@@ -37,6 +39,12 @@ export default function Exposition() {
       setBackground('url("/assets/villain.png")');
       setShowVillain(true);
       setShowAlert(false);
+    } else if (currentTextIndex === texts.length - 2) {
+      // Show black screen before last text
+      setShowBlackScreen(true);
+      setBackground("none");
+      setShowVillain(false);
+      setShowAlert(false);
     }
 
     if (currentTextIndex < texts.length - 1) {
@@ -46,13 +54,54 @@ export default function Exposition() {
     }
   };
 
+  // Get the container style based on current state
+  const getContainerStyle = () => {
+    const baseStyle = {
+      color: showBlackScreen ? "white" : "#0e1450",
+      height: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "flex-start",
+      textAlign: "left",
+      fontFamily: "'Inria Sans', sans-serif",
+      paddingLeft: "7rem",
+      paddingRight: "7rem",
+      position: "relative",
+      transition: "all 0.5s ease",
+    };
+
+    if (showBlackScreen) {
+      return {
+        ...baseStyle,
+        backgroundColor: "black",
+      };
+    } else {
+      return {
+        ...baseStyle,
+        backgroundImage: background,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      };
+    }
+  };
+
   return (
-    <div style={{ ...styles.container, backgroundImage: background }}>
+    <div style={getContainerStyle()}>
       {showVillain && <h2 style={styles.villainTitle}>Maverixx Flux</h2>}
 
-      <div style={styles.textBox}>
+      <div
+        style={{
+          ...styles.textBox,
+          backgroundColor: showBlackScreen
+            ? "rgba(0, 0, 0, 0.7)"
+            : "rgba(255, 255, 255, 0.9)",
+        }}
+      >
         {showAlert ? (
           <h3 style={styles.alertText}>{texts[currentTextIndex]}</h3>
+        ) : showBlackScreen ? (
+          <h3 style={styles.blackScreenText}>{texts[currentTextIndex]}</h3>
         ) : (
           <>
             {currentTextIndex < 11 && (
@@ -73,7 +122,14 @@ export default function Exposition() {
       </div>
 
       <div style={styles.buttonContainer}>
-        <button style={styles.nextButton} onClick={handleNextClick}>
+        <button
+          style={{
+            ...styles.nextButton,
+            backgroundColor: showBlackScreen ? "white" : "#0e1450",
+            color: showBlackScreen ? "black" : "white",
+          }}
+          onClick={handleNextClick}
+        >
           {currentTextIndex < texts.length - 1 ? "Next →" : "Enter Kitchen →"}
         </button>
       </div>
@@ -82,22 +138,6 @@ export default function Exposition() {
 }
 
 const styles = {
-  container: {
-    color: "#0e1450",
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "flex-start",
-    textAlign: "left",
-    fontFamily: "'Inria Sans', sans-serif",
-    paddingLeft: "7rem",
-    paddingRight: "7rem",
-    position: "relative",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    transition: "background-image 0.5s ease",
-  },
   villainTitle: {
     position: "absolute",
     top: "2rem",
@@ -112,7 +152,6 @@ const styles = {
     bottom: "100px",
     left: "7rem",
     right: "7rem",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
     borderRadius: "8px",
     padding: "20px",
     boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
@@ -129,6 +168,14 @@ const styles = {
     color: "#ff0000",
     margin: 0,
     whiteSpace: "pre-line",
+  },
+  blackScreenText: {
+    fontSize: "1.8rem",
+    fontWeight: "400",
+    color: "white",
+    margin: 0,
+    whiteSpace: "pre-line",
+    textAlign: "center",
   },
   textContainer: {
     margin: 0,
@@ -153,7 +200,5 @@ const styles = {
     borderRadius: "0.5rem",
     cursor: "pointer",
     fontFamily: "'Inria Sans', sans-serif",
-    color: "white",
-    backgroundColor: "#0e1450",
   },
 };
