@@ -10,8 +10,11 @@ export default function Exposition() {
       <h2 style={styles.title}>add exposition screens - adi</h2>
 
       <div style={styles.buttonContainer}>
-        <button style={styles.startButton} onClick={() => navigate("/kitchen-room")}>
-          temporary next button →
+        <button
+          style={styles.startButton}
+          onClick={() => navigate("/kitchen-room")}
+        >
+          Skip to kitchen →
         </button>
       </div>
     </div>
@@ -20,7 +23,7 @@ export default function Exposition() {
 
 const styles = {
   container: {
-    backgroundColor: "#fff",
+    backgroundImage: 'url("/assets/exposition.png")',
     color: "#0e1450",
     height: "100vh",
     display: "flex",
@@ -53,6 +56,8 @@ const styles = {
   },
   startButton: {
     fontSize: "2rem",
+    position: "absolute",
+    top: "10%",
     fontWeight: "400",
     border: "none",
     padding: "0.75rem 2rem",
