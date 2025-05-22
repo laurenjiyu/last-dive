@@ -61,7 +61,7 @@ export default function KitchenRoom() {
               alt="Open Book"
               style={styles.modalImage}
             />
-
+            <div style={styles.recipeBook}>Recipe Book</div>
             <div style={styles.inputContainer}>
               {correctWords.map((_, i) => (
                 <input
@@ -167,7 +167,18 @@ const styles = {
     border: "4px solid #5E68F8",
     borderRadius: "5px",
   },
-
+  recipeBook: {
+    position: "absolute",
+    top: 90,
+    left: "50%",
+    transform: "translateX(-50%)",
+    fontSize: "2rem",
+    color: "#5E68F8",
+    backgroundColor: "white",
+    padding: "0.5rem 1rem",
+    borderRadius: "10px",
+    zIndex: 10,
+  },
   feedbackSuccess: {
     position: "absolute",
     top: 20,
