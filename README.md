@@ -1,87 +1,237 @@
-# Red Reveal Puzzle Creator
+# CS247G: Last Dive
 
-This project contains several HTML files that implement "red reveal" puzzles - a type of puzzle that uses color properties to hide and reveal text.
+This repository contains projects, assignments, and resources for the CS247G course at Stanford University. The repository serves as a collection of interactive experiences and game design explorations, including a React-based game application and HTML-based puzzles.
 
-## How Red Reveal Puzzles Work
+## Repository Purpose
 
-Red reveal puzzles work based on the following principles:
+This workspace is dedicated to:
+- Exploring game design concepts and principles
+- Creating interactive experiences that engage users
+- Implementing various puzzle and game mechanics
+- Experimenting with different interaction modalities
 
-1. Hidden text is written in cyan (blue-green) color
-2. The text is camouflaged with "noise" in red, pink, and yellow colors
-3. When viewed through a red filter, the cyan text appears dark while the red/pink/yellow noise blends with the filter
-4. This makes the hidden text visible through the filter!
+## Detailed Repository Breakdown
 
-The science behind this is:
-- Red filters block blue and green light
-- Cyan is a combination of blue and green (with no red)
-- When viewed through a red filter, cyan appears black
-- Red, yellow and pink contain red components, so they appear more transparent through the filter
+### Directory Structure
 
-## Files Included
+```
+last-dive/
+├── README.md                      # Main repository documentation
+├── package.json                   # Node.js dependencies and scripts
+├── package-lock.json              # Locked versions of dependencies
+├── .gitignore                     # Git ignore configuration
+├── public/                        # Public assets for React app
+│   ├── index.html                 # Main HTML entry point
+│   ├── favicon.ico                # Website favicon
+│   ├── manifest.json              # PWA manifest
+│   ├── robots.txt                 # Search engine configuration
+│   ├── logo192.png                # React logo (192px)
+│   ├── logo512.png                # React logo (512px)
+│   └── assets/                    # Game assets
+│       ├── villain.png            # Villain character image
+│       ├── redroom.png            # Red room background
+│       ├── exposition.png         # Exposition screen background
+│       ├── kitchen-bg.png         # Kitchen background image
+│       ├── openbook.jpg           # Open book image
+│       ├── submarine.png          # Submarine image
+│       └── book.jpeg              # Book image
+├── src/                           # Source code for React app
+│   ├── index.js                   # Main JavaScript entry point
+│   ├── index.css                  # Global styles
+│   ├── App.js                     # Main App component
+│   ├── App.css                    # App-specific styles
+│   ├── App.test.js                # App tests
+│   ├── logo.svg                   # React logo SVG
+│   ├── theme.js                   # Theme configuration
+│   ├── reportWebVitals.js         # Performance reporting
+│   ├── setupTests.js              # Test configuration
+│   ├── components/                # Reusable React components
+│   │   ├── GameContainer.jsx      # Container for game elements
+│   │   ├── Padlock.jsx            # Padlock puzzle component
+│   │   └── Timer.jsx              # Timer component
+│   └── screens/                   # Game screen components
+│       ├── StartScreen.jsx        # Initial game screen
+│       ├── Exposition.jsx         # Story exposition screen
+│       └── KitchenRoom.jsx        # Kitchen room gameplay screen
+└── red-reveal-puzzles/            # Red reveal puzzle implementations
+    ├── red-reveal.html            # Basic red reveal puzzle
+    ├── red-reveal-interactive.html # Interactive customizable version
+    ├── red-reveal-printable.html  # Printable version with filter template
+    ├── red-reveal-crowded.html    # Dense field of letters version
+    ├── red-reveal-scattered.html  # Scattered R, E, D letters version
+    ├── red-reveal-ordered-scatter.html # Ordered but separated R-E-D version
+    ├── red-reveal-printable-page.html # Full-page printable version
+    └── red-reveal-image-export.html # Version with image export capability
+```
 
-This project includes three different HTML files for creating and using red reveal puzzles:
+### React Application Structure
 
-1. **red-reveal.html**: A basic implementation of a red reveal puzzle that hides the word "RED"
-2. **red-reveal-interactive.html**: An interactive version that lets you create your own puzzles
-3. **red-reveal-printable.html**: A printable version with a red filter template included
+The repository contains a React-based game application with the following key components:
 
-## How to Use
+#### Source Code (`src/`)
 
-### Basic Version (red-reveal.html)
+The `src/` directory contains the React application source code:
 
-1. Open the file in a web browser
-2. Look at the puzzle - can you see the hidden word?
-3. Use a red filter (like a piece of red cellophane or red plastic) over the puzzle to reveal the hidden word
+1. **Core Files**
+   - `index.js`: The entry point for the React application
+   - `App.js`: The main App component that handles routing between game screens
+   - `theme.js`: Contains theme configuration for consistent styling
 
-### Interactive Version (red-reveal-interactive.html)
+2. **Components (`src/components/`)**
+   - `GameContainer.jsx`: A wrapper component that provides common game functionality
+   - `Padlock.jsx`: Interactive padlock puzzle component
+   - `Timer.jsx`: Component for tracking and displaying game time
 
-1. Open the file in a web browser
-2. Read the instructions to understand how the puzzle works
-3. Look at the example puzzle
-4. Click "Simulate Red Filter" to see how the puzzle would look through a red filter
-5. Enter your own word or phrase in the "Create Your Own Puzzle" section
-6. Click "Generate Puzzle" to create a custom puzzle with your hidden text
-7. Use the filter simulation to reveal your hidden word
+3. **Game Screens (`src/screens/`)**
+   - `StartScreen.jsx`: The initial screen players see when starting the game
+   - `Exposition.jsx`: Provides story context and introduction
+   - `KitchenRoom.jsx`: Interactive kitchen environment with puzzles and objects
 
-### Printable Version (red-reveal-printable.html)
+#### Assets (`public/assets/`)
 
-1. Open the file in a web browser
-2. Click the "Print Puzzle and Filter" button
-3. After printing, cut out the red filter template along the dashed line
-4. Hold the filter over the puzzle to reveal the hidden word
+The `public/assets/` directory contains game graphics and media:
 
-## DIY Red Filter Ideas
+1. **Environment Assets**
+   - `kitchen-bg.png`: Background image for the kitchen scene
+   - `redroom.png`: Background for the red room scene
+   - `exposition.png`: Background for the exposition/story screen
 
-If you don't have a red filter, you can try one of these alternatives:
+2. **Character Assets**
+   - `villain.png`: Image of the game's antagonist
 
-- Red cellophane or plastic wrap
-- Red transparent folder or document sleeve
-- Red plastic report cover
-- Red sunglasses
-- Red plastic party cup (flattened)
-- Red candy wrapper
-- Red transparent plastic toy
-- Red highlighter on a clear plastic sheet
+3. **Object Assets**
+   - `submarine.png`: Submarine image used in puzzles or story
+   - `book.jpeg`: Book object that can be interacted with
+   - `openbook.jpg`: Open book showing content
 
-The more transparent and red the material is, the better the effect will be!
+### Red Reveal Puzzles
 
-## Science and Educational Value
+The `red-reveal-puzzles` directory contains HTML-based puzzles that use color properties to hide and reveal text.
 
-Red reveal puzzles provide a fun way to explore color theory and how our eyes perceive different colors. They demonstrate how:
+#### File Descriptions
 
-- Colors are created by reflecting specific wavelengths of light
-- Filters work by blocking certain wavelengths
-- The RGB (Red, Green, Blue) color model works
-- Complementary colors interact
+1. **red-reveal.html**
+   - Basic implementation of the red reveal concept
+   - Hides the word "RED" using cyan text among red/pink/yellow noise
+   - Simple, focused demonstration of the core concept
 
-This makes them excellent educational tools for teaching color theory, optics, and visual perception.
+2. **red-reveal-interactive.html**
+   - Interactive version with customization features
+   - Allows users to create their own hidden words/phrases
+   - Includes a simulated red filter view
+   - Contains explanatory sections about how the puzzle works
 
-## Technical Implementation
+3. **red-reveal-printable.html**
+   - Designed specifically for printing
+   - Includes a printable red filter template on a separate page
+   - Optimized layout for physical use
 
-These puzzles are implemented using HTML, CSS, and JavaScript. The key technical aspects include:
+4. **red-reveal-crowded.html**
+   - Creates a dense field of random letters
+   - Hides multiple instances of "RED" throughout the field
+   - Designed for a more challenging puzzle experience
 
-- Using CSS to set text colors for the hidden words (cyan) and noise characters (red, pink, and yellow)
-- Creating a simulated filter effect using a semi-transparent red overlay
-- Dynamically generating puzzles from user input
+5. **red-reveal-scattered.html**
+   - Scatters individual R, E, and D letters randomly throughout the grid
+   - Each letter is hidden independently among noise characters
+   - Creates a different visual pattern when revealed
 
-Feel free to examine the source code to understand how these puzzles are implemented and modify them for your own purposes!
+6. **red-reveal-ordered-scatter.html**
+   - Places R, E, D letters in correct sequence but separated by noise
+   - Creates multiple instances of the separated sequence
+   - Balances order and chaos for an interesting reveal effect
+
+7. **red-reveal-printable-page.html**
+   - Full-page printable version with extensive customization
+   - Allows adjustment of grid size, hidden word, and colors
+   - Supports custom layout patterns
+   - Optimized for standard letter-size printing
+
+8. **red-reveal-image-export.html**
+   - Adds functionality to capture the puzzle as a downloadable image
+   - Supports PNG and JPEG export formats
+   - Allows customization of dimensions and font size
+   - Useful for sharing puzzles in digital formats
+
+## Technologies Used
+
+This repository utilizes various technologies:
+
+### React Application
+- **React**: Front-end JavaScript library for building user interfaces
+- **CSS**: For styling components and screens
+- **JavaScript (ES6+)**: For application logic and interactivity
+
+### Red Reveal Puzzles
+- **HTML**: For structure
+- **CSS**: For styling and color manipulation
+- **JavaScript**: For interactive features and dynamic content generation
+- **html2canvas** library (in the image export version): For converting HTML to images
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm (for React application)
+- A modern web browser (Chrome, Firefox, Safari, or Edge recommended)
+- Basic familiarity with web technologies for code exploration
+- For physical puzzles: ability to print and access to red transparent materials
+
+### Running the React Application
+
+1. Clone this repository:
+   ```
+   git clone https://github.com/yourusername/last-dive.git
+   cd last-dive
+   ```
+
+2. Install dependencies:
+   ```
+   npm install
+   ```
+
+3. Start the development server:
+   ```
+   npm start
+   ```
+
+4. Open your browser to `http://localhost:3000`
+
+### Running the Red Reveal Puzzles
+
+1. Navigate to the red-reveal-puzzles directory
+2. Open any HTML file in your web browser:
+   ```
+   open red-reveal-puzzles/red-reveal.html    # On macOS
+   start red-reveal-puzzles/red-reveal.html   # On Windows
+   ```
+
+## Game Overview
+
+"Last Dive" is an interactive escape room-style game where players navigate through different environments, solve puzzles, and uncover a mysterious story. The game features:
+
+- Multiple interconnected scenes
+- Interactive objects and puzzles
+- Time-based challenges
+- Narrative-driven gameplay
+
+## Contributing
+
+This repository is primarily for course-related work, but contributions and improvements are welcome:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
+
+## License
+
+[Specify license information as appropriate]
+
+## Acknowledgments
+
+- CS247G course instructors and teaching staff
+- Stanford University Computer Science Department
+- [Any additional acknowledgments as appropriate]
