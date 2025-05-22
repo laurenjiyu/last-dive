@@ -18,7 +18,7 @@ function App() {
           }
         />
         <Route
-          path="/game"
+          path="/exposition"
           element={
             <GameContainer>
               <Exposition />

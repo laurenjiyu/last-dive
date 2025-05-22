@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import Timer from "../components/Timer";
+import Padlock from '../components/Padlock';
 import { useNavigate } from "react-router-dom";
 
 export default function KitchenRoom() {
   const navigate = useNavigate();
+  //for padlock
+  const [lockOpen, setLockOpen] = useState(false);
+  const [unlocked, setUnlocked] = useState(false);
   //for the recipt book modal:
   const [modalOpen, setModalOpen] = useState(false);
   const [bookClicked, setBookClicked] = useState(false);
@@ -11,6 +15,8 @@ export default function KitchenRoom() {
     setModalOpen(true);
     setBookClicked(true);
   };
+  // open padlock input
+  const handlePadlockClick = () => setLockOpen(true);
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -44,6 +50,34 @@ export default function KitchenRoom() {
   return (
     <div style={styles.container}>
       <Timer />
+      {/* ---------- Padlock Icon ---------- */}
+      {!unlocked && (
+        <button                                    // transparent button overlay
+          style={styles.padlockButton}             //padlockButton style
+          onClick={handlePadlockClick}             // click handler
+          aria-label="Open padlock"
+        >
+          <img
+            src="/assets/padlock-icon.png"
+            alt="Padlocked Door"
+            style={styles.padlockIcon}            //NEW padlockIcon style
+          />
+        </button>
+      )}
+
+      {/* ---------- Padlock Modal ---------- */}
+      {lockOpen && !unlocked && (
+        <Padlock
+          correctCode="08251"                    //correct code prop
+          onClose={() => setLockOpen(false)}       //onClose callback
+          onSuccess={() => {                       //onSuccess callback
+            setUnlocked(true);                     //hide padlock after unlock
+            setLockOpen(false);
+            // TODO: reveal door or navigate further
+          }}
+        />
+      )}
+      
       {/* Book Icon (whether it's found or not found) */}
       <img
         src={bookClicked ? "/assets/openbook.jpg" : "/assets/book.jpeg"}
@@ -252,5 +286,34 @@ const styles = {
     padding: 0,
     cursor: "pointer",
     fontFamily: "'Inria Sans', sans-serif",
+  },
+  // >>> NEW: padlock icon style
+  padlockIcon: {
+    position: 'absolute',
+    top: '35%',
+    right: '15%',
+    width: 60,
+    height: 60,
+    cursor: 'pointer',
+    zIndex: 2
+  },
+  // >>> NEW: transparent overlay button for padlock
+  padlockButton: {
+    position: 'absolute',
+    top: '60%',
+    right: '10%',
+    width: 100,
+    height: 160,
+    opacity: 0,
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
+    zIndex: 2,
+  },
+  // >>> NEW: size & display for padlock icon inside button
+  padlockIcon: {
+    width: '100%',
+    height: '100%',
+    display: 'block',
   },
 };

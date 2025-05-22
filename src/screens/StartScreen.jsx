@@ -18,7 +18,7 @@ export default function StartScreen() {
         </div>
       </div>
       <div style={styles.buttonContainer}>
-        <button style={styles.startButton} onClick={() => navigate("/game")}>
+        <button style={styles.startButton} onClick={() => navigate("/exposition")}>
           Start →
         </button>
       </div>
@@ -87,5 +87,6 @@ const styles = {
     top: "7rem",
     width: "30rem",
     opacity: 0.5,
+    pointerEvents: "none",
   },
 };
