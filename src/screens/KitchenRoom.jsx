@@ -8,7 +8,38 @@ export default function KitchenRoom() {
   //for padlock
   const [lockOpen, setLockOpen] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
-  //for the recipt book modal:
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [showChef, setShowChef] = useState(false);
+  const [showTitle, setShowTitle] = useState(false);
+  const [showGameElements, setShowGameElements] = useState(false);
+  const [showTextBox, setShowTextBox] = useState(true); // New state for text box visibility
+
+  const kitchenTexts = [
+    "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
+    "Even though Maverixx Flux added way too much ambient lighting, it's still a nice kitchen. Or it would be a nice kitchen, if not for the.. emotive man who runs the place:",
+    "World famous chef and media personality, Rordan Gamsey. He's almost as loud as his food is good, and his food is really good.",
+    "Oi!",
+    "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...",
+  ];
+
+  const handleNextClick = () => {
+    if (currentTextIndex === 2) {
+      setShowChef(true);
+      setShowTitle(true);
+    }
+
+    if (currentTextIndex < kitchenTexts.length - 1) {
+      setCurrentTextIndex(currentTextIndex + 1);
+    } else {
+      // When we reach the last text and click next
+      setShowChef(false);
+      setShowTitle(false);
+      setShowTextBox(false); // Hide the text box
+      setShowGameElements(true); // Show game elements
+    }
+  };
+
+  // Rest of your existing state and handlers for the recipe book
   const [modalOpen, setModalOpen] = useState(false);
   const [bookClicked, setBookClicked] = useState(false);
   const handleBookClick = () => {
@@ -46,6 +77,36 @@ export default function KitchenRoom() {
       setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
     }
   };
+
+  if (!showGameElements) {
+    return (
+      <div style={styles.container}>
+        {showChef && (
+          <img
+            src="/assets/chef.png"
+            alt="Rordan Gamsey"
+            style={styles.chefImage}
+          />
+        )}
+
+        {showTextBox && (
+          <div style={styles.textBox}>
+            {showTitle && currentTextIndex === 3 ? (
+              <h2 style={styles.chefTitle}>{kitchenTexts[currentTextIndex]}</h2>
+            ) : (
+              <p style={styles.text}>{kitchenTexts[currentTextIndex]}</p>
+            )}
+          </div>
+        )}
+
+        <div style={styles.buttonContainer}>
+          <button style={styles.nextButton} onClick={handleNextClick}>
+            {currentTextIndex < kitchenTexts.length - 1 ? "Next →" : "Begin →"}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
@@ -95,7 +156,7 @@ export default function KitchenRoom() {
               alt="Open Book"
               style={styles.modalImage}
             />
-
+            <div style={styles.recipeBook}>Recipe Book</div>
             <div style={styles.inputContainer}>
               {correctWords.map((_, i) => (
                 <input
@@ -134,6 +195,8 @@ export default function KitchenRoom() {
   );
 }
 
+// ... (keep your existing styles object)
+
 const styles = {
   container: {
     backgroundImage: 'url("/assets/kitchen-bg.png")',
@@ -145,7 +208,54 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
   },
-  //Recipe Book (before clicked it's hidden, and when it's clicked, it at the top right):
+  textBox: {
+    position: "absolute",
+    bottom: "100px",
+    left: "7rem",
+    right: "7rem",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    borderRadius: "8px",
+    padding: "20px",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.5)",
+    color: "white",
+    textAlign: "center",
+  },
+  text: {
+    fontSize: "1.5rem",
+    margin: 0,
+    lineHeight: "1.5",
+    whiteSpace: "pre-line",
+  },
+  chefTitle: {
+    fontSize: "3rem",
+    fontWeight: "bold",
+    margin: 0,
+    color: "white",
+    textTransform: "uppercase",
+  },
+  buttonContainer: {
+    position: "absolute",
+    bottom: "40px",
+    right: "7rem",
+  },
+  nextButton: {
+    fontSize: "1.5rem",
+    fontWeight: "400",
+    border: "none",
+    padding: "0.75rem 2rem",
+    borderRadius: "0.5rem",
+    cursor: "pointer",
+    fontFamily: "'Inria Sans', sans-serif",
+    color: "white",
+    backgroundColor: "#0e1450",
+  },
+  chefImage: {
+    position: "absolute",
+    right: "5rem",
+    height: "60vh",
+    zIndex: 1,
+  },
+  // Rest of your existing styles...
   bookStyle: (bookClicked) => ({
     position: "absolute",
     top: bookClicked ? 20 : "60%",
@@ -157,7 +267,6 @@ const styles = {
     cursor: "pointer",
     zIndex: 2,
   }),
-  //Recipe Book Modal
   modalOverlay: {
     position: "fixed",
     top: 0,
@@ -181,8 +290,6 @@ const styles = {
     width: "800px",
     height: "auto",
     objectFit: "contain",
-    borderRadius: "10px",
-    zIndex: 11,
   },
   inputContainer: {
     position: "absolute",
@@ -193,18 +300,25 @@ const styles = {
     justifyContent: "center",
     gap: "0.5rem",
   },
-
-  //Recipe Book Modal input text for guesses
   input: {
     width: "100px",
     padding: "0.5rem",
     border: "4px solid #5E68F8",
     borderRadius: "5px",
   },
-
+  recipeBook: {
+    position: "absolute",
+    top: 90,
+    left: "50%",
+    transform: "translateX(-50%)",
+    fontSize: "2rem",
+    color: "#5E68F8",
+    backgroundColor: "white",
+    padding: "0.5rem 1rem",
+  },
   feedbackSuccess: {
     position: "absolute",
-    top: 20,
+    top: 10,
     left: "50%",
     transform: "translateX(-50%)",
     fontSize: "2rem",
@@ -214,10 +328,9 @@ const styles = {
     borderRadius: "10px",
     zIndex: 20,
   },
-
   feedbackClose: {
     position: "absolute",
-    top: 20,
+    top: 10,
     left: "50%",
     transform: "translateX(-50%)",
     fontSize: "1.5rem",
@@ -227,10 +340,9 @@ const styles = {
     borderRadius: "10px",
     zIndex: 20,
   },
-
   submitButton: {
     position: "absolute",
-    bottom: "20%",
+    bottom: "30%",
     padding: "1rem 3rem",
     backgroundColor: "#5E68F8",
     color: "#fff",
@@ -239,10 +351,9 @@ const styles = {
     cursor: "pointer",
     zIndex: 12,
   },
-
   closeButton: {
     position: "absolute",
-    bottom: "10%",
+    bottom: "20%",
     padding: "0.4rem 1rem",
     backgroundColor: "#5E68F8",
     color: "#fff",
@@ -250,42 +361,6 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     zIndex: 12,
-  },
-  titleSection: {
-    marginBottom: "2rem",
-  },
-  title: {
-    fontSize: "9rem",
-    fontWeight: "700",
-    margin: 0,
-  },
-  subtitleSection: {
-    textAlign: "right",
-  },
-  subtitle: {
-    fontSize: "1.5rem",
-    fontWeight: "300",
-    marginTop: 0,
-  },
-  course: {
-    fontSize: "1rem",
-    fontWeight: "400",
-    marginTop: "1rem",
-  },
-  buttonContainer: {
-    display: "flex",
-    justifyContent: "flex-end",
-    marginTop: "2rem",
-  },
-  startButton: {
-    fontSize: "2rem",
-    fontWeight: "400",
-    color: "white",
-    background: "none",
-    border: "none",
-    padding: 0,
-    cursor: "pointer",
-    fontFamily: "'Inria Sans', sans-serif",
   },
   // >>> NEW: padlock icon style
   padlockIcon: {
