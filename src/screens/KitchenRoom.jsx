@@ -73,7 +73,7 @@ export default function KitchenRoom() {
           onSuccess={() => {                       //onSuccess callback
             setUnlocked(true);                     //hide padlock after unlock
             setLockOpen(false);
-            // TODO: reveal door or navigate further
+            navigate('/congrats');
           }}
         />
       )}

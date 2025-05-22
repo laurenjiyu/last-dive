@@ -4,6 +4,7 @@ import StartScreen from "./screens/StartScreen";
 import Exposition from "./screens/Exposition";
 import KitchenRoom from "./screens/KitchenRoom";
 import GameContainer from "./components/GameContainer";
+import Congrats from './screens/Congrats';
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             </GameContainer>
           }
         />
+        <Route path="/congrats" element={<GameContainer><Congrats /></GameContainer>} />
       </Routes>
     </Router>
   );
