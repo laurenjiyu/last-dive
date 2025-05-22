@@ -147,8 +147,6 @@ const styles = {
     width: "800px",
     height: "auto",
     objectFit: "contain",
-    borderRadius: "10px",
-    zIndex: 11,
   },
   inputContainer: {
     position: "absolute",
@@ -176,12 +174,10 @@ const styles = {
     color: "#5E68F8",
     backgroundColor: "white",
     padding: "0.5rem 1rem",
-    borderRadius: "10px",
-    zIndex: 10,
   },
   feedbackSuccess: {
     position: "absolute",
-    top: 20,
+    top: 10,
     left: "50%",
     transform: "translateX(-50%)",
     fontSize: "2rem",
@@ -194,7 +190,7 @@ const styles = {
 
   feedbackClose: {
     position: "absolute",
-    top: 20,
+    top: 10,
     left: "50%",
     transform: "translateX(-50%)",
     fontSize: "1.5rem",
@@ -207,7 +203,7 @@ const styles = {
 
   submitButton: {
     position: "absolute",
-    bottom: "20%",
+    bottom: "30%",
     padding: "1rem 3rem",
     backgroundColor: "#5E68F8",
     color: "#fff",
@@ -219,7 +215,7 @@ const styles = {
 
   closeButton: {
     position: "absolute",
-    bottom: "10%",
+    bottom: "20%",
     padding: "0.4rem 1rem",
     backgroundColor: "#5E68F8",
     color: "#fff",
