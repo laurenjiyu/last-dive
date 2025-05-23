@@ -18,7 +18,7 @@ export default function Exposition() {
     "Apparently this whole submarine was funded and designed by the absurdly wealthy tech CEO, Maverixx Flux. Besides submarines, he also sells shitty low-poly cars.",
     "Can't stand the guy, but he looooves to talk. How many rooms did he say this submarine had, again?",
     "A common area, a kitchen, a spa, a gym, an Instagram selfie studio, and a control room. Oh, and a single escape pod and about 20 lifeboats strapped to the sides of the vessel.",
-    "Besides your lucky sweepstakes spot, he's also invited chef Rordan Gamsey, workout influencer Creatine Gaines, and model Donna Runnewaye, and Mark Zuckerberg from the Social Network.",
+    "Besides your lucky sweepstakes spot, he's also invited chef Rordan Gamsey, workout influencer Creatine Gaines, and model Donna Runnewaye, and Zark Muckerberg from the Social Network.",
     "All in all, pretty bad company. But none of them are here right now, so you can sit back and relax for a mome--- HUH?",
     "⚠️ ALERT – PRESSURE BREACH DETECTED",
     "🚨 ALERT\nSYSTEM OVERRIDE – 2:13 AM",
