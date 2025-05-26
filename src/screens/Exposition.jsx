@@ -13,8 +13,7 @@ export default function Exposition() {
   const texts = [
     "You've won an all-expenses-paid trip aboard SeaGate, the world's most extravagant deep-sea luxury submarine cruise.",
     "It's been 5 long days of listening to tech bros brag about underwater startups and influencers livestreaming caviar mukbangs.",
-    "You were counting the hours until you could leave.",
-    "But now… something's wrong.",
+    "You were counting the hours until you could leave. But now… something's wrong.",
     "Apparently this whole submarine was funded and designed by the absurdly wealthy tech CEO, Maverixx Flux. Besides submarines, he also sells shitty low-poly cars.",
     "Can't stand the guy, but he looooves to talk. How many rooms did he say this submarine had, again?",
     "A common area, a kitchen, a spa, a gym, an Instagram selfie studio, and a control room. Oh, and a single escape pod and about 20 lifeboats strapped to the sides of the vessel.",
@@ -32,10 +31,10 @@ export default function Exposition() {
   ];
 
   const handleNextClick = () => {
-    if (currentTextIndex === 8) {
+    if (currentTextIndex === 7) {
       setBackground('url("/assets/redroom.png")');
       setShowAlert(true);
-    } else if (currentTextIndex === 10) {
+    } else if (currentTextIndex === 9) {
       setBackground('url("/assets/villain.png")');
       setShowVillain(true);
       setShowAlert(false);
