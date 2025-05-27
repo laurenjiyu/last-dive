@@ -20,7 +20,7 @@ export default function KitchenRoom() {
     "Even though Maverixx Flux added way too much ambient lighting, it's still a nice kitchen. Or it would be a nice kitchen, if not for the.. emotive man who runs the place:",
     "World famous chef and media personality, Rordan Gamsey. He's almost as loud as his food is good, and his food is really good.",
     "Oi!",
-    "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...",
+    "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
 
   const handleNextClick = () => {
