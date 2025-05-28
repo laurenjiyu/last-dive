@@ -14,6 +14,7 @@ export default function KitchenRoom() {
   const [showGameElements, setShowGameElements] = useState(false);
   const [showTextBox, setShowTextBox] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showEnvelopeModal, setShowEnvelopeModal] = useState(false);
 
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
@@ -22,6 +23,7 @@ export default function KitchenRoom() {
     "Oi!",
     "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
+  console.log("Component updated");
 
   const handleNextClick = () => {
     if (currentTextIndex === 2) {
@@ -32,10 +34,10 @@ export default function KitchenRoom() {
     if (currentTextIndex < kitchenTexts.length - 1) {
       setCurrentTextIndex(currentTextIndex + 1);
     } else {
+      setShowTextBox(false);
       setShowChef(false);
       setShowTitle(false);
-      setShowTextBox(false);
-      setShowGameElements(true);
+      setShowEnvelopeModal(true);
     }
   };
 
@@ -75,10 +77,33 @@ export default function KitchenRoom() {
             {currentTextIndex < kitchenTexts.length - 1 ? "Next →" : "Begin →"}
           </button>
         </div>
+
+        {showEnvelopeModal && (
+          <div style={styles.modalOverlay}>
+            <div style={styles.modalContent}>
+              <p style={styles.modalText}>
+                Look for the physical envelope that looks like this
+              </p>
+              <img
+                src="/assets/envelope.jpg"
+                alt="Envelope"
+                style={styles.envelopeImage}
+              />
+              <button
+                style={styles.closeModalButton}
+                onClick={() => {
+                  setShowEnvelopeModal(false);
+                  setShowGameElements(true);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
-
   return (
     <div style={styles.container}>
       <Timer />
@@ -133,7 +158,7 @@ const styles = {
   },
   textBox: {
     position: "absolute",
-    bottom: "100px",
+    bottom: "70px",
     left: "7rem",
     right: "7rem",
     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -174,8 +199,8 @@ const styles = {
   },
   chefImage: {
     position: "absolute",
-    right: "5rem",
-    height: "60vh",
+    right: "4rem",
+    height: "70vh",
     bottom: "200px",
     zIndex: 1,
   },
@@ -203,5 +228,45 @@ const styles = {
     padding: 0,
     cursor: "pointer",
     zIndex: 2,
+  },
+  modalOverlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: "30px",
+    borderRadius: "10px",
+    textAlign: "center",
+    position: "relative",
+    maxWidth: "90vw",
+    maxHeight: "90vh",
+  },
+  modalText: {
+    fontSize: "1.3rem",
+    marginBottom: "20px",
+  },
+  envelopeImage: {
+    maxWidth: "100%",
+    height: "auto",
+    borderRadius: "8px",
+  },
+  closeModalButton: {
+    position: "absolute",
+    top: "10px",
+    right: "10px",
+    fontSize: "1.5rem",
+    border: "none",
+    background: "transparent",
+    cursor: "pointer",
+    color: "#333",
   },
 };
