@@ -226,7 +226,7 @@ export default function KitchenRoom() {
                         color: "#0e1450",
                       }}
                     >
-                      Choose a shape:
+                      Choose a hint based on which puzzle you are working on:
                     </p>
                     <div
                       style={{
