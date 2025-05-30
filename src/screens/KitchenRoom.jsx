@@ -15,6 +15,9 @@ export default function KitchenRoom() {
   const [showTextBox, setShowTextBox] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [showEnvelopeModal, setShowEnvelopeModal] = useState(false);
+  const [showHintModal, setShowHintModal] = useState(false);
+  const [hintStep, setHintStep] = useState(0); // 0 = intro, 1 = shapes, 2 = hint result
+  const [selectedHint, setSelectedHint] = useState("");
 
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
@@ -120,7 +123,6 @@ export default function KitchenRoom() {
           />
         </button>
       )}
-
       {lockOpen && !unlocked && (
         <Padlock
           correctCode="08251"
@@ -132,15 +134,199 @@ export default function KitchenRoom() {
           }}
         />
       )}
-
       <img
         src={"/assets/book.png"}
         alt="book"
         onClick={handleBookClick}
         style={styles.bookStyle}
       />
-
       <Book modalOpen={modalOpen} onClose={handleCloseModal} />
+      <img
+        src="/assets/hint.png"
+        alt="Hint Icon"
+        onClick={() => {
+          setShowHintModal(true);
+          setHintStep(0);
+          setSelectedHint("");
+        }}
+        style={{
+          position: "absolute",
+          bottom: 20,
+          left: 20,
+          width: 100,
+          cursor: "pointer",
+          zIndex: 2,
+        }}
+      />
+      {showHintModal && (
+        <div>
+          <img src="/assets/chef.png" alt="Chef" style={styles.hintChefImage} />
+
+          <div
+            style={{
+              position: "fixed",
+              top: 550,
+              left: 0,
+              right: 0,
+              bottom: 0,
+
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                borderRadius: "8px",
+                padding: "30px",
+                width: "80%",
+                maxWidth: "800px",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                position: "relative",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.8rem",
+                  margin: "0 0 5px 0",
+                  color: "#0e1450",
+                }}
+              >
+                Rordan Gamsey
+              </h2>
+
+              <div style={{ marginBottom: "2rem" }}>
+                {hintStep === 0 && (
+                  <>
+                    <p
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "200",
+                        margin: 0,
+                        lineHeight: "1.5",
+                        whiteSpace: "pre-line",
+                        color: "#0e1450",
+                      }}
+                    >
+                      What is it now, ninwit? A hint, you say?
+                    </p>
+                  </>
+                )}
+                {hintStep === 1 && (
+                  <>
+                    <p
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "300",
+                        margin: "0 0 20px 0",
+                        lineHeight: "1.5",
+                        whiteSpace: "pre-line",
+                        color: "#0e1450",
+                      }}
+                    >
+                      Choose a shape:
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "1rem",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      {["▲", "●", "■", "★", "❤"].map((shape, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            const hintMap = {
+                              "▲": "The triangle hint  .",
+                              "●": "The circle hint  .",
+                              "■": "The square hint  .",
+                              "★": "The star hint.",
+                              "❤": "The heart  hint .",
+                            };
+                            setSelectedHint(hintMap[shape]);
+                            setHintStep(2);
+                          }}
+                          style={styles.nextButton}
+                        >
+                          {shape}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {hintStep === 2 && (
+                  <p
+                    style={{
+                      fontSize: "1.5rem",
+                      fontWeight: "300",
+                      margin: 0,
+                      lineHeight: "1.5",
+                      whiteSpace: "pre-line",
+                      color: "#0e1450",
+                    }}
+                  >
+                    {selectedHint}
+                  </p>
+                )}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                {hintStep > 0 && (
+                  <button
+                    style={styles.nextButton}
+                    onClick={() => setHintStep(hintStep - 1)}
+                  >
+                    Back
+                  </button>
+                )}
+
+                {hintStep < 2 ? (
+                  <button
+                    style={styles.nextButton}
+                    onClick={() =>
+                      hintStep === 0 ? setHintStep(1) : setShowHintModal(false)
+                    }
+                  >
+                    {hintStep === 0 ? "Next" : "Close"}
+                  </button>
+                ) : (
+                  <button
+                    style={styles.nextButton}
+                    onClick={() => setShowHintModal(false)}
+                  >
+                    Close
+                  </button>
+                )}
+              </div>
+
+              <button
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  fontSize: "1.5rem",
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  color: "#333",
+                }}
+                onClick={() => setShowHintModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -259,6 +445,24 @@ const styles = {
     height: "auto",
     borderRadius: "8px",
   },
+  fullscreenHintModal: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "70%",
+    zIndex: 999,
+    backgroundColor: "transparent",
+    display: "flex",
+    justifyContent: "flex-end", // <-- move chef to right
+    alignItems: "flex-end",
+  },
+
+  hintChefImage: {
+    height: "60vh",
+    marginLeft: "40rem",
+    marginBottom: "10rem",
+  },
+
   closeModalButton: {
     position: "absolute",
     top: "10px",
