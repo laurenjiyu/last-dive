@@ -2,13 +2,20 @@
 import React, { useState, useEffect } from "react";
 import theme from "../theme";
 
-export default function Book({ modalOpen, onClose }) {
+export default function Book({ modalOpen, onClose, onIncorrectGuess }) {
   const [wordInputs, setWordInputs] = useState(["", "", "", "", ""]);
   const [feedback, setFeedback] = useState("");
+  const [guess, setGuess] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState("/assets/openbook-default.png");
+  const [backgroundImage, setBackgroundImage] = useState(
+    "/assets/openbook-default.png"
+  );
   const [courseType, setCourseType] = useState("appetizer");
-  const [correctWords, setCorrectWords] = useState(["beluga", "sturgeon", "caviar"]);
+  const [correctWords, setCorrectWords] = useState([
+    "beluga",
+    "sturgeon",
+    "caviar",
+  ]);
 
   const setCourse = (type) => {
     let words = [];
@@ -37,30 +44,34 @@ export default function Book({ modalOpen, onClose }) {
     newInputs[index] = value.toLowerCase();
     setWordInputs(newInputs);
   };
-const checkWords = () => {
-  const incorrectIndices = correctWords
-    .map((word, i) => (wordInputs[i] !== word ? i : null))
-    .filter((i) => i !== null);
+  const checkWords = () => {
+    const incorrectIndices = correctWords
+      .map((word, i) => (wordInputs[i] !== word ? i : null))
+      .filter((i) => i !== null);
 
-  if (incorrectIndices.length === 0) {
-    setFeedback("success");
-    setShowFeedback(true);
+    if (incorrectIndices.length === 0) {
+      setFeedback("success");
+      setShowFeedback(true);
 
-    const courseImageMap = {
-      appetizer: "/assets/openbook-course1.png",
-      entree: "/assets/openbook-course2.png",
-      dessert: "/assets/openbook-course3.png",
-    };
-    setBackgroundImage(courseImageMap[courseType] || "/assets/openbook-default.png");
-  } else {
-    const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
-    const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
-    setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
-    setShowFeedback(true);
-    setBackgroundImage("/assets/openbook-rejected.png"); // optional: add rejection feedback
-  }
-};
-
+      const courseImageMap = {
+        appetizer: "/assets/openbook-course1.png",
+        entree: "/assets/openbook-course2.png",
+        dessert: "/assets/openbook-course3.png",
+      };
+      setBackgroundImage(
+        courseImageMap[courseType] || "/assets/openbook-default.png"
+      );
+    } else {
+      const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
+      const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
+      setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
+      setShowFeedback(true);
+      setBackgroundImage("/assets/openbook-rejected.png"); // optional: add rejection feedback
+      if (typeof onIncorrectGuess === "function") {
+        onIncorrectGuess();
+      }
+    }
+  };
 
   useEffect(() => {
     if (showFeedback) {
@@ -70,7 +81,6 @@ const checkWords = () => {
   }, [showFeedback]);
 
   if (!modalOpen) return null;
-
 
   return (
     <div style={styles.modalOverlay} onClick={onClose}>

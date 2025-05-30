@@ -18,7 +18,7 @@ export default function KitchenRoom() {
   const [showHintModal, setShowHintModal] = useState(false);
   const [hintStep, setHintStep] = useState(0); // 0 = intro, 1 = shapes, 2 = hint result
   const [selectedHint, setSelectedHint] = useState("");
-
+  const [decrementTime, setDecrementTime] = useState(0);
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
     "Even though Maverixx Flux added way too much ambient lighting, it's still a nice kitchen. Or it would be a nice kitchen, if not for the.. emotive man who runs the place:",
@@ -109,7 +109,7 @@ export default function KitchenRoom() {
   }
   return (
     <div style={styles.container}>
-      <Timer />
+      <Timer decrementTime={decrementTime} />
       {!unlocked && (
         <button
           style={styles.padlockButton}
@@ -140,7 +140,14 @@ export default function KitchenRoom() {
         onClick={handleBookClick}
         style={styles.bookStyle}
       />
-      <Book modalOpen={modalOpen} onClose={handleCloseModal} />
+      <Book
+        modalOpen={modalOpen}
+        onClose={handleCloseModal}
+        onIncorrectGuess={() => {
+          alert("Wrong guess – you lost a minute!");
+          setDecrementTime((prev) => prev + 1);
+        }}
+      />
       <img
         src="/assets/hint.png"
         alt="Hint Icon"
