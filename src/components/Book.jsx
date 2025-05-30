@@ -6,29 +6,61 @@ export default function Book({ modalOpen, onClose }) {
   const [wordInputs, setWordInputs] = useState(["", "", "", "", ""]);
   const [feedback, setFeedback] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
-  const correctWords = ["red", "velvet", "cupcake", "protein", "bar"];
+  const [backgroundImage, setBackgroundImage] = useState("/assets/openbook-default.png");
+  const [courseType, setCourseType] = useState("appetizer");
+  const [correctWords, setCorrectWords] = useState(["beluga", "sturgeon", "caviar"]);
+
+  const setCourse = (type) => {
+    let words = [];
+    switch (type) {
+      case "appetizer":
+        words = ["beluga", "sturgeon", "caviar"];
+        break;
+      case "entree":
+        words = ["medium", "rare", "beef", "wellington"];
+        break;
+      case "dessert":
+      default:
+        words = ["red", "velvet", "cupcake", "protein", "bar"];
+        break;
+    }
+    setCourseType(type);
+    setCorrectWords(words);
+    setWordInputs(new Array(words.length).fill(""));
+    setFeedback("");
+    setShowFeedback(false);
+    setBackgroundImage("/assets/openbook-default.png");
+  };
 
   const handleWordChange = (index, value) => {
     const newInputs = [...wordInputs];
     newInputs[index] = value.toLowerCase();
     setWordInputs(newInputs);
   };
+const checkWords = () => {
+  const incorrectIndices = correctWords
+    .map((word, i) => (wordInputs[i] !== word ? i : null))
+    .filter((i) => i !== null);
 
-  const checkWords = () => {
-    const incorrectIndices = correctWords
-      .map((word, i) => (wordInputs[i] !== word ? i : null))
-      .filter((i) => i !== null);
+  if (incorrectIndices.length === 0) {
+    setFeedback("success");
+    setShowFeedback(true);
 
-    if (incorrectIndices.length === 0) {
-      setFeedback("success");
-      setShowFeedback(true);
-    } else {
-      const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
-      const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
-      setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
-      setShowFeedback(true);
-    }
-  };
+    const courseImageMap = {
+      appetizer: "/assets/openbook-course1.png",
+      entree: "/assets/openbook-course2.png",
+      dessert: "/assets/openbook-course3.png",
+    };
+    setBackgroundImage(courseImageMap[courseType] || "/assets/openbook-default.png");
+  } else {
+    const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
+    const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
+    setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
+    setShowFeedback(true);
+    setBackgroundImage("/assets/openbook-rejected.png"); // optional: add rejection feedback
+  }
+};
+
 
   useEffect(() => {
     if (showFeedback) {
@@ -39,13 +71,24 @@ export default function Book({ modalOpen, onClose }) {
 
   if (!modalOpen) return null;
 
-  const backgroundImage = feedback.startsWith("incorrect")
-    ? "/assets/openbook-rejected.png"
-    : "/assets/openbook-default.png";
 
   return (
     <div style={styles.modalOverlay} onClick={onClose}>
       <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
+          {["appetizer", "entree", "dessert"].map((type) => (
+            <button
+              key={type}
+              onClick={() => setCourse(type)}
+              style={{
+                ...styles.courseButton,
+                ...(courseType === type ? styles.courseButtonActive : {}),
+              }}
+            >
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))}
+        </div>
         <img src={backgroundImage} alt="Open Book" style={styles.modalImage} />
         <div style={styles.leftHalf}>
           <div style={styles.recipeBook}>
@@ -156,7 +199,7 @@ const styles = {
   },
   feedbackSuccess: {
     position: "absolute",
-    top: 10,
+    top: 50,
     left: "50%",
     transform: "translateX(-50%)",
     fontSize: "2rem",
@@ -202,5 +245,21 @@ const styles = {
     borderRadius: "4px",
     cursor: "pointer",
     zIndex: 12,
+  },
+  courseButton: {
+    padding: "0.6rem 1.2rem",
+    backgroundColor: "#f0f0f0",
+    color: "#333",
+    border: "2px solid #5E68F8",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "1rem",
+    fontWeight: "bold",
+    zIndex: 12,
+  },
+  courseButtonActive: {
+    backgroundColor: "#5E68F8",
+    color: "white",
+    borderColor: "#3949ab",
   },
 };
