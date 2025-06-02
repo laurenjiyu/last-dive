@@ -1,26 +1,32 @@
 import React, { useState } from "react";
 import Timer from "../components/Timer";
-import Padlock from '../components/Padlock';
+import Padlock from "../components/Padlock";
+import Book from "../components/Book";
 import { useNavigate } from "react-router-dom";
 
 export default function KitchenRoom() {
   const navigate = useNavigate();
-  //for padlock
   const [lockOpen, setLockOpen] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [showChef, setShowChef] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [showGameElements, setShowGameElements] = useState(false);
-  const [showTextBox, setShowTextBox] = useState(true); // New state for text box visibility
-
+  const [showTextBox, setShowTextBox] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [showEnvelopeModal, setShowEnvelopeModal] = useState(false);
+  const [showHintModal, setShowHintModal] = useState(false);
+  const [hintStep, setHintStep] = useState(0); // 0 = intro, 1 = shapes, 2 = hint result
+  const [selectedHint, setSelectedHint] = useState("");
+  const [decrementTime, setDecrementTime] = useState(0);
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
     "Even though Maverixx Flux added way too much ambient lighting, it's still a nice kitchen. Or it would be a nice kitchen, if not for the.. emotive man who runs the place:",
     "World famous chef and media personality, Rordan Gamsey. He's almost as loud as his food is good, and his food is really good.",
     "Oi!",
-    "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...",
+    "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
+  console.log("Component updated");
 
   const handleNextClick = () => {
     if (currentTextIndex === 2) {
@@ -31,51 +37,21 @@ export default function KitchenRoom() {
     if (currentTextIndex < kitchenTexts.length - 1) {
       setCurrentTextIndex(currentTextIndex + 1);
     } else {
-      // When we reach the last text and click next
+      setShowTextBox(false);
       setShowChef(false);
       setShowTitle(false);
-      setShowTextBox(false); // Hide the text box
-      setShowGameElements(true); // Show game elements
+      setShowEnvelopeModal(true);
     }
   };
 
-  // Rest of your existing state and handlers for the recipe book
-  const [modalOpen, setModalOpen] = useState(false);
-  const [bookClicked, setBookClicked] = useState(false);
   const handleBookClick = () => {
     setModalOpen(true);
-    setBookClicked(true);
   };
-  // open padlock input
+
   const handlePadlockClick = () => setLockOpen(true);
 
   const handleCloseModal = () => {
     setModalOpen(false);
-  };
-  const [userGuess, setUserGuess] = useState("");
-  const [feedback, setFeedback] = useState("");
-  const [wordInputs, setWordInputs] = useState(["", "", "", "", ""]);
-
-  const handleWordChange = (index, value) => {
-    const newInputs = [...wordInputs];
-    newInputs[index] = value.toLowerCase();
-    setWordInputs(newInputs);
-  };
-
-  const correctWords = ["red", "velvet", "cupcake", "protein", "bar"];
-
-  const checkWords = () => {
-    const incorrectIndices = correctWords
-      .map((word, i) => (wordInputs[i] !== word ? i : null))
-      .filter((i) => i !== null);
-
-    if (incorrectIndices.length === 0) {
-      setFeedback("success");
-    } else {
-      const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
-      const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
-      setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
-    }
   };
 
   if (!showGameElements) {
@@ -104,98 +80,263 @@ export default function KitchenRoom() {
             {currentTextIndex < kitchenTexts.length - 1 ? "Next →" : "Begin →"}
           </button>
         </div>
+
+        {showEnvelopeModal && (
+          <div style={styles.modalOverlay}>
+            <div style={styles.modalContent}>
+              <p style={styles.modalText}>
+                Look for the physical envelope that looks like this
+              </p>
+              <img
+                src="/assets/envelope.jpg"
+                alt="Envelope"
+                style={styles.envelopeImage}
+              />
+              <button
+                style={styles.closeModalButton}
+                onClick={() => {
+                  setShowEnvelopeModal(false);
+                  setShowGameElements(true);
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
-
   return (
     <div style={styles.container}>
-      <Timer />
-      {/* ---------- Padlock Icon ---------- */}
+      <Timer decrementTime={decrementTime} />
       {!unlocked && (
-        <button                                    // transparent button overlay
-          style={styles.padlockButton}             //padlockButton style
-          onClick={handlePadlockClick}             // click handler
+        <button
+          style={styles.padlockButton}
+          onClick={handlePadlockClick}
           aria-label="Open padlock"
         >
           <img
             src="/assets/padlock-icon.png"
             alt="Padlocked Door"
-            style={styles.padlockIcon}            //NEW padlockIcon style
+            style={styles.padlockIcon}
           />
         </button>
       )}
-
-      {/* ---------- Padlock Modal ---------- */}
       {lockOpen && !unlocked && (
         <Padlock
-          correctCode="08251"                    //correct code prop
-          onClose={() => setLockOpen(false)}       //onClose callback
-          onSuccess={() => {                       //onSuccess callback
-            setUnlocked(true);                     //hide padlock after unlock
+          correctCode="08251"
+          onClose={() => setLockOpen(false)}
+          onSuccess={() => {
+            setUnlocked(true);
             setLockOpen(false);
-            navigate('/congrats');
+            navigate("/congrats");
           }}
         />
       )}
-      
-      {/* Book Icon (whether it's found or not found) */}
       <img
-        src={bookClicked ? "/assets/openbook.jpg" : "/assets/book.jpeg"}
+        src={"/assets/book.png"}
         alt="book"
         onClick={handleBookClick}
-        style={styles.bookStyle(bookClicked)}
+        style={styles.bookStyle}
       />
+      <Book
+        modalOpen={modalOpen}
+        onClose={handleCloseModal}
+        onIncorrectGuess={() => {
+          alert("Wrong guess – you lost a minute!");
+          setDecrementTime((prev) => prev + 1);
+        }}
+      />
+      <img
+        src="/assets/hint.png"
+        alt="Hint Icon"
+        onClick={() => {
+          setShowHintModal(true);
+          setHintStep(0);
+          setSelectedHint("");
+        }}
+        style={{
+          position: "absolute",
+          bottom: 20,
+          left: 20,
+          width: 100,
+          cursor: "pointer",
+          zIndex: 2,
+        }}
+      />
+      {showHintModal && (
+        <div>
+          <img src="/assets/chef.png" alt="Chef" style={styles.hintChefImage} />
 
-      {/* Recipe Book when clicked on */}
-      {modalOpen && (
-        <div style={styles.modalOverlay} onClick={handleCloseModal}>
-          <div style={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <img
-              src="/assets/openbook.jpg"
-              alt="Open Book"
-              style={styles.modalImage}
-            />
-            <div style={styles.recipeBook}>Recipe Book</div>
-            <div style={styles.inputContainer}>
-              {correctWords.map((_, i) => (
-                <input
-                  key={i}
-                  type="text"
-                  placeholder={`Word ${i + 1}`}
-                  value={wordInputs[i]}
-                  onChange={(e) => handleWordChange(i, e.target.value)}
-                  style={{ ...styles.input, marginBottom: "0.5rem" }}
-                />
-              ))}
-            </div>
+          <div
+            style={{
+              position: "fixed",
+              top: 550,
+              left: 0,
+              right: 0,
+              bottom: 0,
 
-            <button onClick={checkWords} style={styles.submitButton}>
-              Submit
-            </button>
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                borderRadius: "8px",
+                padding: "30px",
+                width: "80%",
+                maxWidth: "800px",
+                boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+                position: "relative",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "1.8rem",
+                  margin: "0 0 5px 0",
+                  color: "#0e1450",
+                }}
+              >
+                Rordan Gamsey
+              </h2>
 
-            {feedback === "success" && (
-              <div style={styles.feedbackSuccess}>Success!</div>
-            )}
-            {feedback.startsWith("incorrect:") && (
-              <div style={styles.feedbackClose}>
-                Your <strong>{feedback.split(":")[1]}</strong> word
-                {feedback.split(":")[1].includes(",") ? "s are" : " is"}{" "}
-                incorrect.
+              <div style={{ marginBottom: "2rem" }}>
+                {hintStep === 0 && (
+                  <>
+                    <p
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "200",
+                        margin: 0,
+                        lineHeight: "1.5",
+                        whiteSpace: "pre-line",
+                        color: "#0e1450",
+                      }}
+                    >
+                      What is it now, ninwit? A hint, you say?
+                    </p>
+                  </>
+                )}
+                {hintStep === 1 && (
+                  <>
+                    <p
+                      style={{
+                        fontSize: "1.5rem",
+                        fontWeight: "300",
+                        margin: "0 0 20px 0",
+                        lineHeight: "1.5",
+                        whiteSpace: "pre-line",
+                        color: "#0e1450",
+                      }}
+                    >
+                      Choose a hint based on which puzzle you are working on:
+                    </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "1rem",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      {["▲", "●", "■", "★", "❤"].map((shape, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            const hintMap = {
+                              "▲": "The triangle hint  .",
+                              "●": "The circle hint  .",
+                              "■": "The square hint  .",
+                              "★": "The star hint.",
+                              "❤": "The heart  hint .",
+                            };
+                            setSelectedHint(hintMap[shape]);
+                            setHintStep(2);
+                          }}
+                          style={styles.nextButton}
+                        >
+                          {shape}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {hintStep === 2 && (
+                  <p
+                    style={{
+                      fontSize: "1.5rem",
+                      fontWeight: "300",
+                      margin: 0,
+                      lineHeight: "1.5",
+                      whiteSpace: "pre-line",
+                      color: "#0e1450",
+                    }}
+                  >
+                    {selectedHint}
+                  </p>
+                )}
               </div>
-            )}
 
-            <button onClick={handleCloseModal} style={styles.closeButton}>
-              Close
-            </button>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                {hintStep > 0 && (
+                  <button
+                    style={styles.nextButton}
+                    onClick={() => setHintStep(hintStep - 1)}
+                  >
+                    Back
+                  </button>
+                )}
+
+                {hintStep < 2 ? (
+                  <button
+                    style={styles.nextButton}
+                    onClick={() =>
+                      hintStep === 0 ? setHintStep(1) : setShowHintModal(false)
+                    }
+                  >
+                    {hintStep === 0 ? "Next" : "Close"}
+                  </button>
+                ) : (
+                  <button
+                    style={styles.nextButton}
+                    onClick={() => setShowHintModal(false)}
+                  >
+                    Close
+                  </button>
+                )}
+              </div>
+
+              <button
+                style={{
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  fontSize: "1.5rem",
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  color: "#333",
+                }}
+                onClick={() => setShowHintModal(false)}
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       )}
     </div>
   );
 }
-
-// ... (keep your existing styles object)
 
 const styles = {
   container: {
@@ -210,7 +351,7 @@ const styles = {
   },
   textBox: {
     position: "absolute",
-    bottom: "100px",
+    bottom: "70px",
     left: "7rem",
     right: "7rem",
     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -251,144 +392,92 @@ const styles = {
   },
   chefImage: {
     position: "absolute",
-    right: "5rem",
-    height: "60vh",
+    right: "4rem",
+    height: "70vh",
+    bottom: "200px",
     zIndex: 1,
   },
-  // Rest of your existing styles...
-  bookStyle: (bookClicked) => ({
+  bookStyle: {
     position: "absolute",
-    top: bookClicked ? 20 : "60%",
-    left: bookClicked ? "auto" : "50%",
-    right: bookClicked ? 20 : "auto",
-    transform: bookClicked ? "none" : "translate(-50%, -50%)",
-    width: bookClicked ? 60 : 100,
-    height: bookClicked ? 60 : 100,
+    right: 20,
+    bottom: 20,
+    width: 120,
     cursor: "pointer",
     zIndex: 2,
-  }),
+  },
+  padlockIcon: {
+    width: "100%",
+    height: "100%",
+    display: "block",
+  },
+  padlockButton: {
+    position: "absolute",
+    top: "60%",
+    right: "10%",
+    width: 100,
+    height: 160,
+    opacity: 0,
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    zIndex: 2,
+  },
   modalOverlay: {
     position: "fixed",
     top: 0,
     left: 0,
-    height: "100vh",
-    width: "100vw",
-    backgroundColor: "rgba(0,0,0,0.6)",
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: 10,
+    zIndex: 1000,
   },
   modalContent: {
+    backgroundColor: "#fff",
+    padding: "30px",
+    borderRadius: "10px",
+    textAlign: "center",
     position: "relative",
-    background: "transparent",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    maxWidth: "90vw",
+    maxHeight: "90vh",
   },
-  modalImage: {
-    width: "800px",
+  modalText: {
+    fontSize: "1.3rem",
+    marginBottom: "20px",
+  },
+  envelopeImage: {
+    maxWidth: "100%",
     height: "auto",
-    objectFit: "contain",
+    borderRadius: "8px",
   },
-  inputContainer: {
-    position: "absolute",
-    top: "40%",
-    zIndex: 12,
+  fullscreenHintModal: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "70%",
+    zIndex: 999,
+    backgroundColor: "transparent",
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: "0.5rem",
+    justifyContent: "flex-end", // <-- move chef to right
+    alignItems: "flex-end",
   },
-  input: {
-    width: "100px",
-    padding: "0.5rem",
-    border: "4px solid #5E68F8",
-    borderRadius: "5px",
+
+  hintChefImage: {
+    height: "60vh",
+    marginLeft: "40rem",
+    marginBottom: "10rem",
   },
-  recipeBook: {
+
+  closeModalButton: {
     position: "absolute",
-    top: 90,
-    left: "50%",
-    transform: "translateX(-50%)",
-    fontSize: "2rem",
-    color: "#5E68F8",
-    backgroundColor: "white",
-    padding: "0.5rem 1rem",
-  },
-  feedbackSuccess: {
-    position: "absolute",
-    top: 10,
-    left: "50%",
-    transform: "translateX(-50%)",
-    fontSize: "2rem",
-    color: "#5E68F8",
-    backgroundColor: "white",
-    padding: "0.5rem 1rem",
-    borderRadius: "10px",
-    zIndex: 20,
-  },
-  feedbackClose: {
-    position: "absolute",
-    top: 10,
-    left: "50%",
-    transform: "translateX(-50%)",
+    top: "10px",
+    right: "10px",
     fontSize: "1.5rem",
-    color: "#f44336",
-    backgroundColor: "white",
-    padding: "0.4rem 1rem",
-    borderRadius: "10px",
-    zIndex: 20,
-  },
-  submitButton: {
-    position: "absolute",
-    bottom: "30%",
-    padding: "1rem 3rem",
-    backgroundColor: "#5E68F8",
-    color: "#fff",
     border: "none",
-    borderRadius: "4px",
+    background: "transparent",
     cursor: "pointer",
-    zIndex: 12,
-  },
-  closeButton: {
-    position: "absolute",
-    bottom: "20%",
-    padding: "0.4rem 1rem",
-    backgroundColor: "#5E68F8",
-    color: "#fff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    zIndex: 12,
-  },
-  // >>> NEW: padlock icon style
-  padlockIcon: {
-    position: 'absolute',
-    top: '35%',
-    right: '15%',
-    width: 60,
-    height: 60,
-    cursor: 'pointer',
-    zIndex: 2
-  },
-  // >>> NEW: transparent overlay button for padlock
-  padlockButton: {
-    position: 'absolute',
-    top: '60%',
-    right: '10%',
-    width: 100,
-    height: 160,
-    opacity: 0,
-    border: 'none',
-    padding: 0,
-    cursor: 'pointer',
-    zIndex: 2,
-  },
-  // >>> NEW: size & display for padlock icon inside button
-  padlockIcon: {
-    width: '100%',
-    height: '100%',
-    display: 'block',
+    color: "#333",
   },
 };

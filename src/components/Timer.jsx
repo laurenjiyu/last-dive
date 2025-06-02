@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-export default function Timer({ initialSeconds = 1800 }) {
+export default function Timer({ initialSeconds = 1800, decrementTime }) {
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
+  const [prevDecrement, setPrevDecrement] = useState(decrementTime);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -10,6 +11,14 @@ export default function Timer({ initialSeconds = 1800 }) {
     }, 1000);
     return () => clearInterval(interval);
   }, [secondsLeft]);
+
+  // Decrement time by 60 seconds when decrementTime increases
+  useEffect(() => {
+    if (decrementTime > prevDecrement) {
+      setSecondsLeft((s) => Math.max(0, s - 60)); // don't go below 0
+      setPrevDecrement(decrementTime);
+    }
+  }, [decrementTime, prevDecrement]);
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
@@ -26,7 +35,7 @@ const styles = {
     fontSize: "5rem",
     fontWeight: "bold",
     color: "#fff",
-    textShadow: "0 0 8px #5E68F8, 0 0 4px #5E68F8", 
+    textShadow: "0 0 8px #5E68F8, 0 0 4px #5E68F8",
     padding: "0.5rem 1.5rem",
     position: "absolute",
     top: "2rem",

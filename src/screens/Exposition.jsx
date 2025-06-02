@@ -13,15 +13,14 @@ export default function Exposition() {
   const texts = [
     "You've won an all-expenses-paid trip aboard SeaGate, the world's most extravagant deep-sea luxury submarine cruise.",
     "It's been 5 long days of listening to tech bros brag about underwater startups and influencers livestreaming caviar mukbangs.",
-    "You were counting the hours until you could leave.",
-    "But now… something's wrong.",
+    "You were counting the hours until you could leave. But now… something's wrong.",
     "Apparently this whole submarine was funded and designed by the absurdly wealthy tech CEO, Maverixx Flux. Besides submarines, he also sells shitty low-poly cars.",
     "Can't stand the guy, but he looooves to talk. How many rooms did he say this submarine had, again?",
     "A common area, a kitchen, a spa, a gym, an Instagram selfie studio, and a control room. Oh, and a single escape pod and about 20 lifeboats strapped to the sides of the vessel.",
-    "Besides your lucky sweepstakes spot, he's also invited chef Rordan Gamsey, workout influencer Creatine Gaines, and model Donna Runnewaye, and Mark Zuckerberg from the Social Network.",
+    "Besides your lucky sweepstakes spot, he's also invited chef Rordan Gamsey, workout influencer Creatine Gaines, and model Donna Runnewaye, and Zark Muckerberg from the Social Network.",
     "All in all, pretty bad company. But none of them are here right now, so you can sit back and relax for a mome--- HUH?",
-    "⚠️ ALERT – PRESSURE BREACH DETECTED",
-    "🚨 ALERT\nSYSTEM OVERRIDE – 2:13 AM",
+    "🚨🚨🚨⚠️ ALERT – PRESSURE BREACH DETECTED🚨🚨🚨",
+    "🚨🚨🚨 ALERT\nSYSTEM OVERRIDE – 2:13 AM🚨🚨🚨",
     "“HELLOOOOOOO!!!\nIT'S ME —\nyour GLORIOUS, GENEROUS, and\napparently TOTALLY IGNORED host…",
     "S E A D O O R.\nFive. Days. You've all been down here\nsipping squid martinis and name-dropping space startups\nlike it's TEDxAtlantis \nand yet NOT ONE OF YOU remembered my....",
     "favorite podcast,\ntop ten amino acids, or\nmy LIMITED EDITION Fabergé scuba suit??",
@@ -32,10 +31,10 @@ export default function Exposition() {
   ];
 
   const handleNextClick = () => {
-    if (currentTextIndex === 8) {
+    if (currentTextIndex === 7) {
       setBackground('url("/assets/redroom.png")');
       setShowAlert(true);
-    } else if (currentTextIndex === 10) {
+    } else if (currentTextIndex === 9) {
       setBackground('url("/assets/villain.png")');
       setShowVillain(true);
       setShowAlert(false);
