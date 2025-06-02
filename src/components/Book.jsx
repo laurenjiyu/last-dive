@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from "react";
 import theme from "../theme";
 
-export default function Book({ modalOpen, onClose, onIncorrectGuess }) {
+export default function Book({
+  modalOpen,
+  onClose,
+  onIncorrectGuess,
+  onCorrectGuess,
+}) {
   const [wordInputs, setWordInputs] = useState(["", "", "", "", ""]);
   const [feedback, setFeedback] = useState("");
   const [guess, setGuess] = useState("");
@@ -52,6 +57,9 @@ export default function Book({ modalOpen, onClose, onIncorrectGuess }) {
     if (incorrectIndices.length === 0) {
       setFeedback("success");
       setShowFeedback(true);
+      if (typeof onCorrectGuess === "function") {
+        onCorrectGuess(); // triggers the success sound
+      }
 
       const courseImageMap = {
         appetizer: "/assets/openbook-course1.png",

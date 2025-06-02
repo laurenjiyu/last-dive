@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Timer from "../components/Timer";
 import Padlock from "../components/Padlock";
 import Book from "../components/Book";
@@ -19,6 +19,8 @@ export default function KitchenRoom() {
   const [hintStep, setHintStep] = useState(0); // 0 = intro, 1 = shapes, 2 = hint result
   const [selectedHint, setSelectedHint] = useState("");
   const [decrementTime, setDecrementTime] = useState(0);
+  const successSound = new Audio("/sounds/success.mp3");
+
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
     "Even though Maverixx Flux added way too much ambient lighting, it's still a nice kitchen. Or it would be a nice kitchen, if not for the.. emotive man who runs the place:",
@@ -27,6 +29,28 @@ export default function KitchenRoom() {
     "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
   console.log("Component updated");
+  useEffect(() => {
+    const seaAudio = new Audio("/sounds/sea.mp3");
+    seaAudio.loop = true;
+    seaAudio.volume = 0.05;
+
+    const tryPlay = () => {
+      seaAudio
+        .play()
+        .catch((e) =>
+          console.warn("Autoplay blocked until user interaction:", e)
+        );
+      document.removeEventListener("click", tryPlay);
+    };
+
+    document.addEventListener("click", tryPlay);
+
+    return () => {
+      seaAudio.pause();
+      seaAudio.currentTime = 0;
+      document.removeEventListener("click", tryPlay);
+    };
+  }, []);
 
   const handleNextClick = () => {
     if (currentTextIndex === 2) {
@@ -146,6 +170,13 @@ export default function KitchenRoom() {
         onIncorrectGuess={() => {
           alert("Wrong guess – you lost a minute!");
           setDecrementTime((prev) => prev + 1);
+        }}
+        onCorrectGuess={() => {
+          const successSound = new Audio("/sounds/success.mp3");
+          successSound.volume = 1.0;
+          successSound
+            .play()
+            .catch((e) => console.warn("Autoplay blocked:", e));
         }}
       />
       <img
@@ -460,7 +491,7 @@ const styles = {
     zIndex: 999,
     backgroundColor: "transparent",
     display: "flex",
-    justifyContent: "flex-end", // <-- move chef to right
+    justifyContent: "flex-end",
     alignItems: "flex-end",
   },
 
