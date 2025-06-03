@@ -279,11 +279,11 @@ export default function KitchenRoom() {
                           key={idx}
                           onClick={() => {
                             const hintMap = {
-                              "▲": "The triangle hint  .",
-                              "●": "The circle hint  .",
-                              "■": "The square hint  .",
-                              "★": "The star hint.",
-                              "❤": "The heart  hint .",
+                              "▲": "Place the cellophane on top of the scrambled letters. What do you see?",
+                              "●": "Pick the smoothest, silkiest fabric.",
+                              "■": "Not a muffin, but close.",
+                              "★": "I’m in eggs and meat, but I’m not a vitamin.",
+                              "❤": "Realm forbidden to those under 21.",
                             };
                             setSelectedHint(hintMap[shape]);
                             setHintStep(2);
