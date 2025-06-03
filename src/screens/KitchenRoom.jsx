@@ -373,9 +373,13 @@ export default function KitchenRoom() {
 
 const styles = {
   container: {
-    backgroundImage: 'url("/assets/kitchen-bg.png")',
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    backgroundImage: `
+      url("/assets/kitchen.png"),
+            url("/assets/aquarium.gif")
+    `,
+    /* Make sure both cover the full area and are centered */
+    backgroundSize: "cover, cover",
+    backgroundPosition: "center, center",
     height: "100vh",
     position: "relative",
     display: "flex",
