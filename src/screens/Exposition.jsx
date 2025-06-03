@@ -40,7 +40,7 @@ export default function Exposition() {
       setShowAlert(false);
     } else if (currentTextIndex === texts.length - 2) {
       // Show black screen before last text
-      setShowBlackScreen(true);
+      setBackground('url("/assets/redroom.png")');
       setBackground("none");
       setShowVillain(false);
       setShowAlert(false);

@@ -149,7 +149,7 @@ export default function KitchenRoom() {
       )}
       {lockOpen && !unlocked && (
         <Padlock
-          correctCode="08251"
+          correctCode="279208"
           onClose={() => setLockOpen(false)}
           onSuccess={() => {
             setUnlocked(true);
