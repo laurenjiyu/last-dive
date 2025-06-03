@@ -29,6 +29,7 @@ export default function KitchenRoom() {
     "World famous chef and media personality, Rordan Gamsey. He's almost as loud as his food is good, and his food is really good.",
     "Oi!",
     "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
+    "Oi! Just so y'know, the hints don't take away from anything. Use them as you may, no penalty.",
   ];
   console.log("Component updated");
 
@@ -69,7 +70,8 @@ export default function KitchenRoom() {
     2: "/sounds/kitchen3.mp3",
     3: "/sounds/kitchen4.mp3",
     4: "/sounds/kitchen5.mp3",
-    6: "/sounds/gamsay1.mp3",
+    5: "/sounds/kitchen6.mp3",
+    6: "/sounds/gamsay1.mp3", // don't know if this is needed
   };
 
   const musicMap = {
@@ -358,7 +360,7 @@ export default function KitchenRoom() {
                               "▲": "Place the cellophane on top of the scrambled letters. What do you see?",
                               "●": "Pick the smoothest, silkiest fabric.",
                               "■": "Not a muffin, but close.",
-                              "★": "I’m in eggs and meat, but I’m not a vitamin.",
+                              "★": "I'm in eggs and meat, but I'm not a vitamin.",
                               "❤": "Realm forbidden to those under 21.",
                             };
                             setSelectedHint(hintMap[shape]);
