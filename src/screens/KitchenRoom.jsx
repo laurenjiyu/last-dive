@@ -16,10 +16,12 @@ export default function KitchenRoom() {
   const [modalOpen, setModalOpen] = useState(false);
   const [showEnvelopeModal, setShowEnvelopeModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
-  const [hintStep, setHintStep] = useState(0); 
+  const [hintStep, setHintStep] = useState(0);
   const [hintCourse, setHintCourse] = useState("");
   const [selectedHint, setSelectedHint] = useState("");
   const [decrementTime, setDecrementTime] = useState(0);
+  const [timerKey, setTimerKey] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
   const successSound = new Audio("/sounds/success.mp3");
   const audioRef = useRef(null);
   const musicRef = useRef(null);
@@ -34,7 +36,7 @@ export default function KitchenRoom() {
 
   const hintMap = {
     appetizer: {
-      "■": "White whale", // Beluga 
+      "■": "White whale", // Beluga
       "▲": "Doctor with a T", // Sturgeon
       "★": "I’m fancy, salty, and come from the sea, but I’m not a fish myself. You’ll find me on crackers at rich parties.", // Caviar
     },
@@ -54,7 +56,15 @@ export default function KitchenRoom() {
   };
 
   console.log("Component updated");
-
+  useEffect(() => {
+    if (gameOver) {
+      const gameOverAudio = new Audio("/sounds/gameover.mp3");
+      gameOverAudio.volume = 1.0;
+      gameOverAudio.play().catch((e) => {
+        console.warn("Game over sound failed to play:", e);
+      });
+    }
+  }, [gameOver]);
   useEffect(() => {
     const seaAudio = new Audio("/sounds/sea.mp3");
     seaAudio.loop = true;
@@ -228,9 +238,56 @@ export default function KitchenRoom() {
       </div>
     );
   }
+  if (gameOver) {
+    return (
+      <div
+        style={{
+          backgroundImage: `url("/assets/end.png")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100%",
+          width: "100%",
+          position: "relative",
+        }}
+      >
+        <button
+          onClick={() => {
+            setGameOver(false);
+            setUnlocked(false);
+            setLockOpen(false);
+            setShowGameElements(false);
+            setCurrentTextIndex(0);
+            setShowChef(false);
+            setShowTitle(false);
+            setShowTextBox(true);
+            setShowEnvelopeModal(false);
+            setDecrementTime(0);
+            setTimerKey((prev) => prev + 1);
+          }}
+          style={{
+            position: "absolute",
+            bottom: "60px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: "200px",
+            height: "60px",
+            backgroundColor: "transparent",
+            border: "none",
+            cursor: "pointer",
+          }}
+          aria-label="Try Again"
+        />
+      </div>
+    );
+  }
   return (
     <div style={styles.container}>
-      <Timer decrementTime={decrementTime} />
+      <Timer
+        key={timerKey}
+        initialSeconds={1800}
+        decrementTime={decrementTime}
+        onTimeUp={() => setGameOver(true)}
+      />
       {!unlocked && (
         <button
           style={styles.padlockButton}
@@ -265,7 +322,6 @@ export default function KitchenRoom() {
         modalOpen={modalOpen}
         onClose={handleCloseModal}
         onIncorrectGuess={() => {
-          alert("Wrong guess – you lost a minute!");
           setDecrementTime((prev) => prev + 1);
         }}
         onCorrectGuess={() => {
@@ -442,8 +498,6 @@ export default function KitchenRoom() {
                     Back
                   </button>
                 )}
-
-
               </div>
 
               <button

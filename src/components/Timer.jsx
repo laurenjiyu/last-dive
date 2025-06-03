@@ -1,21 +1,30 @@
 import React, { useEffect, useState } from "react";
 
-export default function Timer({ initialSeconds = 1800, decrementTime }) {
+export default function Timer({
+  initialSeconds = 1800,
+  decrementTime,
+  onTimeUp,
+}) {
   const [secondsLeft, setSecondsLeft] = useState(initialSeconds);
   const [prevDecrement, setPrevDecrement] = useState(decrementTime);
 
   useEffect(() => {
-    if (secondsLeft <= 0) return;
     const interval = setInterval(() => {
-      setSecondsLeft((s) => s - 1);
+      setSecondsLeft((s) => Math.max(0, s - 1));
     }, 1000);
-    return () => clearInterval(interval);
-  }, [secondsLeft]);
 
-  // Decrement time by 60 seconds when decrementTime increases
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (secondsLeft === 0 && onTimeUp) {
+      onTimeUp();
+    }
+  }, [secondsLeft, onTimeUp]);
+
   useEffect(() => {
     if (decrementTime > prevDecrement) {
-      setSecondsLeft((s) => Math.max(0, s - 60)); // don't go below 0
+      setSecondsLeft((s) => Math.max(0, s - 60));
       setPrevDecrement(decrementTime);
     }
   }, [decrementTime, prevDecrement]);
