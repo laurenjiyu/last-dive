@@ -248,7 +248,9 @@ export default function KitchenRoom() {
                         color: "#0e1450",
                       }}
                     >
-                      What is it now, ninwit? A hint, you say?
+                      What is it now, ninwit? A hint, you say? I can try to
+                      help, but warning, I only can give hints about the
+                      dessert.
                     </p>
                   </>
                 )}
