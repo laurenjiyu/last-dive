@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Timer from "../components/Timer";
 import Padlock from "../components/Padlock";
 import Book from "../components/Book";
@@ -19,6 +19,10 @@ export default function KitchenRoom() {
   const [hintStep, setHintStep] = useState(0); // 0 = intro, 1 = shapes, 2 = hint result
   const [selectedHint, setSelectedHint] = useState("");
   const [decrementTime, setDecrementTime] = useState(0);
+  const successSound = new Audio("/sounds/success.mp3");
+  const audioRef = useRef(null);
+  const musicRef = useRef(null);
+
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
     "Even though Maverixx Flux added way too much ambient lighting, it's still a nice kitchen. Or it would be a nice kitchen, if not for the.. emotive man who runs the place:",
@@ -27,6 +31,100 @@ export default function KitchenRoom() {
     "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
   console.log("Component updated");
+
+  useEffect(() => {
+    const seaAudio = new Audio("/sounds/sea.mp3");
+    seaAudio.loop = true;
+    seaAudio.volume = 0.05;
+
+    const tryPlay = () => {
+      seaAudio
+        .play()
+        .catch((e) =>
+          console.warn("Autoplay blocked until user interaction:", e)
+        );
+      document.removeEventListener("click", tryPlay);
+    };
+
+    document.addEventListener("click", tryPlay);
+
+    return () => {
+      seaAudio.pause();
+      seaAudio.currentTime = 0;
+      document.removeEventListener("click", tryPlay);
+    };
+  }, []);
+
+  useEffect(() => {
+  // Stop previous audio if it exists
+  if (audioRef.current) {
+    audioRef.current.pause();
+    audioRef.current = null;
+  }
+
+  // Map index to audio file name
+  const audioMap = {
+    0: "/sounds/kitchen1.mp3",
+    1: "/sounds/kitchen2.mp3",
+    2: "/sounds/kitchen3.mp3",
+    3: "/sounds/kitchen4.mp3",
+    4: "/sounds/kitchen5.mp3",
+    6: "/sounds/gamsay1.mp3",
+  };
+
+  const musicMap = {
+    0: "/sounds/sea.mp3",
+  }
+  
+    const audioFile = audioMap[currentTextIndex];
+    const musicFile = musicMap[currentTextIndex];
+
+    // ── Handle dialogue audio ──
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    if (audioFile) {
+      const audio = new Audio(audioFile);
+      audioRef.current = audio;
+      audio.play().catch((err) => {
+        console.warn("Audio playback failed:", err);
+      });
+    }
+
+    // ── Handle background music ──
+    const musicSrc = musicFile ? window.location.origin + musicFile : null;
+
+    if (musicFile) {
+      if (!musicRef.current) {
+        const music = new Audio(musicFile);
+        music.loop = true;
+        music.volume = 0.4;
+        musicRef.current = music;
+        music.play().catch((err) => {
+          console.warn("Music playback failed:", err);
+        });
+      } else if (!musicRef.current.src.includes(musicFile)) {
+        musicRef.current.pause();
+        const newMusic = new Audio(musicFile);
+        newMusic.loop = true;
+        newMusic.volume = 0.4;
+        musicRef.current = newMusic;
+        newMusic.play().catch((err) => {
+          console.warn("Music switch failed:", err);
+        });
+      }
+    }
+
+    // ── Cleanup on unmount or text index change ──
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [currentTextIndex]);
 
   const handleNextClick = () => {
     if (currentTextIndex === 2) {
@@ -125,7 +223,7 @@ export default function KitchenRoom() {
       )}
       {lockOpen && !unlocked && (
         <Padlock
-          correctCode="08251"
+          correctCode="279208"
           onClose={() => setLockOpen(false)}
           onSuccess={() => {
             setUnlocked(true);
@@ -147,6 +245,13 @@ export default function KitchenRoom() {
           alert("Wrong guess – you lost a minute!");
           setDecrementTime((prev) => prev + 1);
         }}
+        onCorrectGuess={() => {
+          const successSound = new Audio("/sounds/success.mp3");
+          successSound.volume = 1.0;
+          successSound
+            .play()
+            .catch((e) => console.warn("Autoplay blocked:", e));
+        }}
       />
       <img
         src="/assets/hint.png"
@@ -158,9 +263,9 @@ export default function KitchenRoom() {
         }}
         style={{
           position: "absolute",
-          bottom: 20,
-          left: 20,
-          width: 100,
+          bottom: 30,
+          left: 0,
+          width: 184,
           cursor: "pointer",
           zIndex: 2,
         }}
@@ -217,7 +322,9 @@ export default function KitchenRoom() {
                         color: "#0e1450",
                       }}
                     >
-                      What is it now, ninwit? A hint, you say?
+                      What is it now, ninwit? A hint, you say? I can try to
+                      help, but warning, I only can give hints about the
+                      dessert.
                     </p>
                   </>
                 )}
@@ -248,11 +355,11 @@ export default function KitchenRoom() {
                           key={idx}
                           onClick={() => {
                             const hintMap = {
-                              "▲": "The triangle hint  .",
-                              "●": "The circle hint  .",
-                              "■": "The square hint  .",
-                              "★": "The star hint.",
-                              "❤": "The heart  hint .",
+                              "▲": "Place the cellophane on top of the scrambled letters. What do you see?",
+                              "●": "Pick the smoothest, silkiest fabric.",
+                              "■": "Not a muffin, but close.",
+                              "★": "I’m in eggs and meat, but I’m not a vitamin.",
+                              "❤": "Realm forbidden to those under 21.",
                             };
                             setSelectedHint(hintMap[shape]);
                             setHintStep(2);
@@ -340,9 +447,13 @@ export default function KitchenRoom() {
 
 const styles = {
   container: {
-    backgroundImage: 'url("/assets/kitchen-bg.png")',
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    backgroundImage: `
+      url("/assets/kitchen.png"),
+            url("/assets/aquarium.gif")
+    `,
+    /* Make sure both cover the full area and are centered */
+    backgroundSize: "cover, cover",
+    backgroundPosition: "center, center",
     height: "100vh",
     position: "relative",
     display: "flex",
@@ -460,7 +571,7 @@ const styles = {
     zIndex: 999,
     backgroundColor: "transparent",
     display: "flex",
-    justifyContent: "flex-end", // <-- move chef to right
+    justifyContent: "flex-end",
     alignItems: "flex-end",
   },
 

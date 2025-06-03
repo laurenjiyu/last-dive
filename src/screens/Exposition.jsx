@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { colors } from "../theme";
 import { useNavigate } from "react-router-dom";
 
 export default function Exposition() {
   const navigate = useNavigate();
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [background, setBackground] = useState('url("/assets/exposition.png")');
+  const [background, setBackground] = useState(
+    'url("/assets/exposition/exposition.png")'
+  );
   const [showAlert, setShowAlert] = useState(false);
   const [showVillain, setShowVillain] = useState(false);
   const [showBlackScreen, setShowBlackScreen] = useState(false);
@@ -27,23 +29,57 @@ export default function Exposition() {
     "So. Let's play a game. The escape pod is locked. I'm the only one who knows the code. And in 30 MINUTES, I'm leaving.\nAlone.",
     "Every room? A challenge. A love letter to me. Something you failed to care about. Solve them, or sink trying.",
     "YOU MIGHT HAVE SURVIVED THE PRESSURE.\nBUT YOU COULDN'T SURVIVE ME.",
-    "Everyone is frantically running, you join them, until...\n\nYou see an open room",
+    "Everyone is frantically running. You join them, until...\n\nYou see an open room",
   ];
 
   const handleNextClick = () => {
-    if (currentTextIndex === 7) {
-      setBackground('url("/assets/redroom.png")');
-      setShowAlert(true);
-    } else if (currentTextIndex === 9) {
-      setBackground('url("/assets/villain.png")');
-      setShowVillain(true);
-      setShowAlert(false);
-    } else if (currentTextIndex === texts.length - 2) {
-      // Show black screen before last text
-      setShowBlackScreen(true);
-      setBackground("none");
-      setShowVillain(false);
-      setShowAlert(false);
+    switch (currentTextIndex) {
+      case 0:
+        setBackground('url("/assets/exposition/techbros.png")');
+        setShowAlert(false);
+        break;
+      case 2:
+        setBackground('url("/assets/exposition/dinner.png")');
+        setShowAlert(false);
+        break;
+      case 4:
+        setBackground('url("/assets/exposition/gym.png")');
+        setShowAlert(false);
+        break;
+      case 5:
+        setBackground('url("/assets/exposition/party.png")');
+        setShowAlert(false);
+        break;
+      case 6:
+        setBackground('url("/assets/exposition/exposition.png")');
+        setShowAlert(false);
+        break;
+      case 7:
+        setBackground('url("/assets/exposition/redroom.png")');
+        setShowAlert(true);
+        break;
+      case 8:
+        setBackground('url("/assets/exposition/mayday.png")');
+        setShowAlert(true);
+        break;
+      case 9:
+        setBackground('url("/assets/exposition/villain.png")');
+        setShowVillain(true);
+        setShowAlert(false);
+        break;
+      case 15:
+        setBackground('url("/assets/exposition/running.png")');
+        setShowVillain(true);
+        setShowAlert(false);
+        break;
+      case texts.length - 2:
+        setBackground('url("/assets/exposition/redroom.png")');
+        setBackground("none");
+        setShowVillain(false);
+        setShowAlert(false);
+        break;
+      default:
+        break;
     }
 
     if (currentTextIndex < texts.length - 1) {
@@ -52,6 +88,106 @@ export default function Exposition() {
       navigate("/kitchen-room");
     }
   };
+  const audioRef = useRef(null);
+  const musicRef = useRef(null);
+
+  useEffect(() => {
+    const audioMap = {
+      0: "/sounds/exposition1.mp3",
+      1: "/sounds/exposition2.mp3",
+      2: "/sounds/exposition3.mp3",
+      3: "/sounds/exposition4.mp3",
+      4: "/sounds/exposition5.mp3",
+      5: "/sounds/exposition6.mp3",
+      6: "/sounds/exposition7.mp3",
+      7: "/sounds/exposition8.mp3",
+      8: "/sounds/alert1.mp3",
+      9: "/sounds/alert2.mp3",
+      10: "/sounds/villain1.mp3",
+      11: "/sounds/villain2.mp3",
+      12: "/sounds/villain3.mp3",
+      13: "/sounds/villain4.mp3",
+      14: "/sounds/game-intro.mp3",
+      15: "/sounds/game-threat.mp3",
+      16: "/sounds/door-open.mp3",
+    };
+
+    const musicMap = {
+      0: "/sounds/intro-music.mp3",
+      1: "/sounds/intro-music.mp3",
+      2: "/sounds/intro-music.mp3",
+      3: "/sounds/intro-music.mp3",
+      4: "/sounds/intro-music.mp3",
+      5: "/sounds/intro-music.mp3",
+      6: "/sounds/intro-music.mp3",
+      7: "/sounds/intro-music.mp3",
+      8: "/sounds/siren.mp3",
+      9: "/sounds/siren.mp3",
+      10: "/sounds/villain-music.mp3",
+      11: "/sounds/villain-music.mp3",
+      12: "/sounds/villain-music.mp3",
+      13: "/sounds/villain-music.mp3",
+    };
+
+    const audioFile = audioMap[currentTextIndex];
+    const musicFile = musicMap[currentTextIndex];
+
+    // ── Handle dialogue audio ──
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    if (audioFile) {
+      const audio = new Audio(audioFile);
+      audioRef.current = audio;
+      audio.play().catch((err) => {
+        console.warn("Audio playback failed:", err);
+      });
+    }
+
+    // ── Handle background music ──
+    const musicSrc = musicFile ? window.location.origin + musicFile : null;
+
+    if (musicFile) {
+      if (!musicRef.current) {
+        const music = new Audio(musicFile);
+        music.loop = true;
+        music.volume = 0.4;
+        musicRef.current = music;
+        music.play().catch((err) => {
+          console.warn("Music playback failed:", err);
+        });
+      } else if (!musicRef.current.src.includes(musicFile)) {
+        musicRef.current.pause();
+        const newMusic = new Audio(musicFile);
+        newMusic.loop = true;
+        newMusic.volume = 0.4;
+        musicRef.current = newMusic;
+        newMusic.play().catch((err) => {
+          console.warn("Music switch failed:", err);
+        });
+      }
+    }
+
+    // ── Cleanup on unmount or text index change ──
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+
+      if (currentTextIndex === texts.length - 1) {
+        if (musicRef.current) {
+          musicRef.current.pause();
+          musicRef.current = null;
+        }
+      } else if (musicRef.current && !musicFile) {
+        musicRef.current.pause();
+        musicRef.current = null;
+      }
+    };
+  }, [currentTextIndex]);
 
   // Get the container style based on current state
   const getContainerStyle = () => {
