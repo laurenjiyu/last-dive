@@ -123,6 +123,10 @@ export default function Exposition() {
       7: "/sounds/intro-music.mp3",
       8: "/sounds/siren.mp3",
       9: "/sounds/siren.mp3",
+      10: "/sounds/villain-music.mp3",
+      11: "/sounds/villain-music.mp3",
+      12: "/sounds/villain-music.mp3",
+      13: "/sounds/villain-music.mp3",
     };
 
     const audioFile = audioMap[currentTextIndex];
@@ -172,7 +176,16 @@ export default function Exposition() {
         audioRef.current.pause();
         audioRef.current = null;
       }
-      // DO NOT pause musicRef here to preserve looping across text changes
+
+      if (currentTextIndex === texts.length - 1) {
+        if (musicRef.current) {
+          musicRef.current.pause();
+          musicRef.current = null;
+        }
+      } else if (musicRef.current && !musicFile) {
+        musicRef.current.pause();
+        musicRef.current = null;
+      }
     };
   }, [currentTextIndex]);
 

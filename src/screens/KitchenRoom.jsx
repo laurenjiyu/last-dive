@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Timer from "../components/Timer";
 import Padlock from "../components/Padlock";
 import Book from "../components/Book";
@@ -20,6 +20,8 @@ export default function KitchenRoom() {
   const [selectedHint, setSelectedHint] = useState("");
   const [decrementTime, setDecrementTime] = useState(0);
   const successSound = new Audio("/sounds/success.mp3");
+  const audioRef = useRef(null);
+  const musicRef = useRef(null);
 
   const kitchenTexts = [
     "Damn this stupid submarine.. the only room you can get into is the adjacent kitchen",
@@ -29,6 +31,7 @@ export default function KitchenRoom() {
     "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
   console.log("Component updated");
+
   useEffect(() => {
     const seaAudio = new Audio("/sounds/sea.mp3");
     seaAudio.loop = true;
@@ -51,6 +54,77 @@ export default function KitchenRoom() {
       document.removeEventListener("click", tryPlay);
     };
   }, []);
+
+  useEffect(() => {
+  // Stop previous audio if it exists
+  if (audioRef.current) {
+    audioRef.current.pause();
+    audioRef.current = null;
+  }
+
+  // Map index to audio file name
+  const audioMap = {
+    0: "/sounds/kitchen1.mp3",
+    1: "/sounds/kitchen2.mp3",
+    2: "/sounds/kitchen3.mp3",
+    3: "/sounds/kitchen4.mp3",
+    4: "/sounds/kitchen5.mp3",
+    6: "/sounds/gamsay1.mp3",
+  };
+
+  const musicMap = {
+    0: "/sounds/sea.mp3",
+  }
+  
+    const audioFile = audioMap[currentTextIndex];
+    const musicFile = musicMap[currentTextIndex];
+
+    // ── Handle dialogue audio ──
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    if (audioFile) {
+      const audio = new Audio(audioFile);
+      audioRef.current = audio;
+      audio.play().catch((err) => {
+        console.warn("Audio playback failed:", err);
+      });
+    }
+
+    // ── Handle background music ──
+    const musicSrc = musicFile ? window.location.origin + musicFile : null;
+
+    if (musicFile) {
+      if (!musicRef.current) {
+        const music = new Audio(musicFile);
+        music.loop = true;
+        music.volume = 0.4;
+        musicRef.current = music;
+        music.play().catch((err) => {
+          console.warn("Music playback failed:", err);
+        });
+      } else if (!musicRef.current.src.includes(musicFile)) {
+        musicRef.current.pause();
+        const newMusic = new Audio(musicFile);
+        newMusic.loop = true;
+        newMusic.volume = 0.4;
+        musicRef.current = newMusic;
+        newMusic.play().catch((err) => {
+          console.warn("Music switch failed:", err);
+        });
+      }
+    }
+
+    // ── Cleanup on unmount or text index change ──
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, [currentTextIndex]);
 
   const handleNextClick = () => {
     if (currentTextIndex === 2) {
