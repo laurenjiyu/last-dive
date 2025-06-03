@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 // Padlock modal with corrected styling and error flash
 export default function Padlock({ correctCode, onClose, onSuccess }) {
-  const [digits, setDigits] = useState(Array(5).fill(0));
+  const [digits, setDigits] = useState(Array(6).fill(0));
   const [error, setError] = useState(false);
 
   const changeDigit = (idx, delta) => {
