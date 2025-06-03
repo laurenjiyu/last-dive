@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { colors } from "../theme";
 import { useNavigate } from "react-router-dom";
 
@@ -52,6 +52,43 @@ export default function Exposition() {
       navigate("/kitchen-room");
     }
   };
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audioMap = {
+      0: "/sounds/exposition1.mp3",
+      1: "/sounds/exposition2.mp3",
+      2: "/sounds/exposition3.mp3",
+      3: "/sounds/exposition4.mp3",
+      4: "/sounds/exposition5.mp3",
+      5: "/sounds/exposition6.mp3",
+      6: "/sounds/exposition7.mp3",
+      7: "/sounds/exposition8.mp3",
+      8: "/sounds/alert1.mp3",
+      9: "/sounds/alert2.mp3",
+      10: "/sounds/villain1.mp3",
+      11: "/sounds/villain2.mp3",
+      12: "/sounds/villain3.mp3",
+      13: "/sounds/villain4.mp3",
+      14: "/sounds/game-intro.mp3",
+      15: "/sounds/game-threat.mp3",
+      16: "/sounds/door-open.mp3",
+    };
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    const audioFile = audioMap[currentTextIndex];
+    if (audioFile) {
+      const audio = new Audio(audioFile);
+      audioRef.current = audio;
+      audio.play().catch((err) => {
+        console.warn("Audio playback failed:", err);
+      });
+    }
+  }, [currentTextIndex]);
 
   // Get the container style based on current state
   const getContainerStyle = () => {
