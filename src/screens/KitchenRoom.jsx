@@ -189,9 +189,9 @@ export default function KitchenRoom() {
         }}
         style={{
           position: "absolute",
-          bottom: 20,
-          left: 20,
-          width: 100,
+          bottom: 30,
+          left: 0,
+          width: 184,
           cursor: "pointer",
           zIndex: 2,
         }}
