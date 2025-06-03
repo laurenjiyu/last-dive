@@ -16,7 +16,8 @@ export default function KitchenRoom() {
   const [modalOpen, setModalOpen] = useState(false);
   const [showEnvelopeModal, setShowEnvelopeModal] = useState(false);
   const [showHintModal, setShowHintModal] = useState(false);
-  const [hintStep, setHintStep] = useState(0); // 0 = intro, 1 = shapes, 2 = hint result
+  const [hintStep, setHintStep] = useState(0); 
+  const [hintCourse, setHintCourse] = useState("");
   const [selectedHint, setSelectedHint] = useState("");
   const [decrementTime, setDecrementTime] = useState(0);
   const successSound = new Audio("/sounds/success.mp3");
@@ -30,6 +31,28 @@ export default function KitchenRoom() {
     "Oi!",
     "This is absurd, innit?! That little brat is so spoiled...he's always asking me to make him his favorite 3 course meal but I can't recall what it is...\nWait, but you know it! Here's this envelope to let you get started.",
   ];
+
+  const hintMap = {
+    appetizer: {
+      "■": "White whale", // Beluga 
+      "▲": "Doctor with a T", // Sturgeon
+      "★": "I’m fancy, salty, and come from the sea, but I’m not a fish myself. You’ll find me on crackers at rich parties.", // Caviar
+    },
+    entree: {
+      "▲": "The Goldilocks shirt size.", // Medium
+      "⬟": "More valuable because I’m hardly around.", // Rare
+      "⬣": "You’ll find me in burgers and steaks. Moo.", // Beef
+      "●": "Look for a common town name on the maps.", // Wellington
+    },
+    dessert: {
+      "■": "Place the cellophane on top of the scrambled letters. What do you see?", // Red
+      "❤": "Pick the smoothest, silkiest fabric.", // Velvet
+      "▲": "Not a muffin, but close.", // Cupdake
+      "●": "I’m in eggs and meat, but I’m not a vitamin.", // Protein
+      "★": "Realm forbidden to those under 21.", // Bar
+    },
+  };
+
   console.log("Component updated");
 
   useEffect(() => {
@@ -56,26 +79,26 @@ export default function KitchenRoom() {
   }, []);
 
   useEffect(() => {
-  // Stop previous audio if it exists
-  if (audioRef.current) {
-    audioRef.current.pause();
-    audioRef.current = null;
-  }
+    // Stop previous audio if it exists
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
 
-  // Map index to audio file name
-  const audioMap = {
-    0: "/sounds/kitchen1.mp3",
-    1: "/sounds/kitchen2.mp3",
-    2: "/sounds/kitchen3.mp3",
-    3: "/sounds/kitchen4.mp3",
-    4: "/sounds/kitchen5.mp3",
-    6: "/sounds/gamsay1.mp3",
-  };
+    // Map index to audio file name
+    const audioMap = {
+      0: "/sounds/kitchen1.mp3",
+      1: "/sounds/kitchen2.mp3",
+      2: "/sounds/kitchen3.mp3",
+      3: "/sounds/kitchen4.mp3",
+      4: "/sounds/kitchen5.mp3",
+      6: "/sounds/gamsay1.mp3",
+    };
 
-  const musicMap = {
-    0: "/sounds/sea.mp3",
-  }
-  
+    const musicMap = {
+      0: "/sounds/sea.mp3",
+    };
+
     const audioFile = audioMap[currentTextIndex];
     const musicFile = musicMap[currentTextIndex];
 
@@ -323,9 +346,30 @@ export default function KitchenRoom() {
                       }}
                     >
                       What is it now, ninwit? A hint, you say? I can try to
-                      help, but warning, I only can give hints about the
-                      dessert.
+                      help, I guess.
                     </p>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "1rem",
+                        marginBottom: "2rem",
+                        marginTop: "1rem",
+                      }}
+                    >
+                      {["appetizer", "entree", "dessert"].map((course) => (
+                        <button
+                          key={course}
+                          onClick={() => {
+                            setHintCourse(course);
+                            setHintStep(1);
+                          }}
+                          style={styles.nextButton}
+                        >
+                          {course.charAt(0).toUpperCase() + course.slice(1)}
+                        </button>
+                      ))}
+                    </div>
                   </>
                 )}
                 {hintStep === 1 && (
@@ -348,27 +392,23 @@ export default function KitchenRoom() {
                         justifyContent: "center",
                         gap: "1rem",
                         marginBottom: "2rem",
+                        marginTop: "1rem",
                       }}
                     >
-                      {["▲", "●", "■", "★", "❤"].map((shape, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() => {
-                            const hintMap = {
-                              "▲": "Place the cellophane on top of the scrambled letters. What do you see?",
-                              "●": "Pick the smoothest, silkiest fabric.",
-                              "■": "Not a muffin, but close.",
-                              "★": "I’m in eggs and meat, but I’m not a vitamin.",
-                              "❤": "Realm forbidden to those under 21.",
-                            };
-                            setSelectedHint(hintMap[shape]);
-                            setHintStep(2);
-                          }}
-                          style={styles.nextButton}
-                        >
-                          {shape}
-                        </button>
-                      ))}
+                      {Object.entries(hintMap[hintCourse]).map(
+                        ([symbol, hint]) => (
+                          <button
+                            key={symbol}
+                            onClick={() => {
+                              setSelectedHint(`${symbol}: ${hint}`);
+                              setHintStep(2);
+                            }}
+                            style={styles.nextButton}
+                          >
+                            {symbol}
+                          </button>
+                        )
+                      )}
                     </div>
                   </>
                 )}
@@ -403,23 +443,7 @@ export default function KitchenRoom() {
                   </button>
                 )}
 
-                {hintStep < 2 ? (
-                  <button
-                    style={styles.nextButton}
-                    onClick={() =>
-                      hintStep === 0 ? setHintStep(1) : setShowHintModal(false)
-                    }
-                  >
-                    {hintStep === 0 ? "Next" : "Close"}
-                  </button>
-                ) : (
-                  <button
-                    style={styles.nextButton}
-                    onClick={() => setShowHintModal(false)}
-                  >
-                    Close
-                  </button>
-                )}
+
               </div>
 
               <button
@@ -448,9 +472,9 @@ export default function KitchenRoom() {
 const styles = {
   container: {
     backgroundImage: `
-      url("/assets/kitchen.png"),
-            url("/assets/aquarium.gif")
-    `,
+     url("/assets/kitchen.png"),
+           url("/assets/aquarium.gif")
+   `,
     /* Make sure both cover the full area and are centered */
     backgroundSize: "cover, cover",
     backgroundPosition: "center, center",
