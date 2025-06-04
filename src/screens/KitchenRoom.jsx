@@ -65,12 +65,12 @@ export default function KitchenRoom() {
 
   // Map index to audio file name
   const audioMap = {
-    0: "/sounds/kitchen1.mp3",
-    1: "/sounds/kitchen2.mp3",
-    2: "/sounds/kitchen3.mp3",
-    3: "/sounds/kitchen4.mp3",
-    4: "/sounds/kitchen5.mp3",
-    5: "/sounds/kitchen6.mp3",
+    0: "/sounds/Kitchen 1.mp3",
+    1: "/sounds/Kitchen 2.mp3",
+    2: "/sounds/Kitchen 3.mp3",
+    3: "/sounds/Kitchen 4.mp3",
+    4: "/sounds/Kitchen 5.mp3",
+    5: "/sounds/Kitchen 6.mp3",
     6: "/sounds/gamsay1.mp3", // don't know if this is needed
   };
 
