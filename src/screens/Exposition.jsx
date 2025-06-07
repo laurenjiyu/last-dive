@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { colors } from "../theme";
 import { useNavigate } from "react-router-dom";
+import {
+  expositionImages,
+  expositionSounds,
+  expositionMusic,
+} from "../asset-links.js";
 
 export default function Exposition() {
   const navigate = useNavigate();
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [background, setBackground] = useState(
-    'url("/assets/exposition/exposition.png")'
+    `url("${expositionImages.exposition}")`
   );
   const [showAlert, setShowAlert] = useState(false);
   const [showVillain, setShowVillain] = useState(false);
@@ -35,45 +40,45 @@ export default function Exposition() {
   const handleNextClick = () => {
     switch (currentTextIndex) {
       case 0:
-        setBackground('url("/assets/exposition/techbros.png")');
+        setBackground(`url("${expositionImages.techbros}")`);
         setShowAlert(false);
         break;
       case 2:
-        setBackground('url("/assets/exposition/dinner.png")');
+        setBackground(`url("${expositionImages.dinner}")`);
         setShowAlert(false);
         break;
       case 4:
-        setBackground('url("/assets/exposition/gym.png")');
+        setBackground(`url("${expositionImages.gym}")`);
         setShowAlert(false);
         break;
       case 5:
-        setBackground('url("/assets/exposition/party.png")');
+        setBackground(`url("${expositionImages.party}")`);
         setShowAlert(false);
         break;
       case 6:
-        setBackground('url("/assets/exposition/exposition.png")');
+        setBackground(`url("${expositionImages.exposition}")`);
         setShowAlert(false);
         break;
       case 7:
-        setBackground('url("/assets/exposition/redroom.png")');
+        setBackground(`url("${expositionImages.redroom}")`);
         setShowAlert(true);
         break;
       case 8:
-        setBackground('url("/assets/exposition/mayday.png")');
+        setBackground(`url("${expositionImages.mayday}")`);
         setShowAlert(true);
         break;
       case 9:
-        setBackground('url("/assets/exposition/villain.png")');
+        setBackground(`url("${expositionImages.villain}")`);
         setShowVillain(true);
         setShowAlert(false);
         break;
       case 15:
-        setBackground('url("/assets/exposition/running.png")');
+        setBackground(`url("${expositionImages.running}")`);
         setShowVillain(true);
         setShowAlert(false);
         break;
       case texts.length - 2:
-        setBackground('url("/assets/exposition/redroom.png")');
+        setBackground(`url("${expositionImages.redroom}")`);
         setBackground("none");
         setShowVillain(false);
         setShowAlert(false);
@@ -93,46 +98,45 @@ export default function Exposition() {
 
   useEffect(() => {
     const audioMap = {
-      0: "/sounds/exposition1.mp3",
-      1: "/sounds/exposition2.mp3",
-      2: "/sounds/exposition3.mp3",
-      3: "/sounds/exposition4.mp3",
-      4: "/sounds/exposition5.mp3",
-      5: "/sounds/exposition6.mp3",
-      6: "/sounds/exposition7.mp3",
-      7: "/sounds/exposition8.mp3",
-      8: "/sounds/alert1.mp3",
-      9: "/sounds/alert2.mp3",
-      10: "/sounds/villain1.mp3",
-      11: "/sounds/villain2.mp3",
-      12: "/sounds/villain3.mp3",
-      13: "/sounds/villain4.mp3",
-      14: "/sounds/game-intro.mp3",
-      15: "/sounds/game-threat.mp3",
-      16: "/sounds/door-open.mp3",
+      0: expositionSounds.exposition1,
+      1: expositionSounds.exposition2,
+      2: expositionSounds.exposition3,
+      3: expositionSounds.exposition4,
+      4: expositionSounds.exposition5,
+      5: expositionSounds.exposition6,
+      6: expositionSounds.exposition7,
+      7: expositionSounds.exposition8,
+      8: expositionSounds.alert1,
+      9: expositionSounds.alert2,
+      10: expositionSounds.villain1,
+      11: expositionSounds.villain2,
+      12: expositionSounds.villain3,
+      13: expositionSounds.villain4,
+      14: expositionSounds.gameIntro,
+      15: expositionSounds.gameThreat,
+      16: expositionSounds.doorOpen,
     };
 
     const musicMap = {
-      0: "/sounds/intro-music.mp3",
-      1: "/sounds/intro-music.mp3",
-      2: "/sounds/intro-music.mp3",
-      3: "/sounds/intro-music.mp3",
-      4: "/sounds/intro-music.mp3",
-      5: "/sounds/intro-music.mp3",
-      6: "/sounds/intro-music.mp3",
-      7: "/sounds/intro-music.mp3",
-      8: "/sounds/siren.mp3",
-      9: "/sounds/siren.mp3",
-      10: "/sounds/villain-music.mp3",
-      11: "/sounds/villain-music.mp3",
-      12: "/sounds/villain-music.mp3",
-      13: "/sounds/villain-music.mp3",
+      0: expositionMusic.intro,
+      1: expositionMusic.intro,
+      2: expositionMusic.intro,
+      3: expositionMusic.intro,
+      4: expositionMusic.intro,
+      5: expositionMusic.intro,
+      6: expositionMusic.intro,
+      7: expositionMusic.intro,
+      8: expositionMusic.siren,
+      9: expositionMusic.siren,
+      10: expositionMusic.villain,
+      11: expositionMusic.villain,
+      12: expositionMusic.villain,
+      13: expositionMusic.villain,
     };
 
     const audioFile = audioMap[currentTextIndex];
     const musicFile = musicMap[currentTextIndex];
 
-    // ── Handle dialogue audio ──
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
@@ -145,9 +149,6 @@ export default function Exposition() {
         console.warn("Audio playback failed:", err);
       });
     }
-
-    // ── Handle background music ──
-    const musicSrc = musicFile ? window.location.origin + musicFile : null;
 
     if (musicFile) {
       if (!musicRef.current) {
@@ -170,7 +171,6 @@ export default function Exposition() {
       }
     }
 
-    // ── Cleanup on unmount or text index change ──
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();

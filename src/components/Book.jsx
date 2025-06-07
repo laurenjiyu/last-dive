@@ -1,6 +1,6 @@
-// Book.jsx
 import React, { useState, useEffect } from "react";
 import theme from "../theme";
+import { bookImages } from "../asset-links";
 
 export default function Book({
   modalOpen,
@@ -12,9 +12,7 @@ export default function Book({
   const [feedback, setFeedback] = useState("");
   const [guess, setGuess] = useState("");
   const [showFeedback, setShowFeedback] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState(
-    "/assets/openbook-default.png"
-  );
+  const [backgroundImage, setBackgroundImage] = useState(bookImages.default);
   const [courseType, setCourseType] = useState("appetizer");
   const [correctWords, setCorrectWords] = useState([
     "beluga",
@@ -41,7 +39,7 @@ export default function Book({
     setWordInputs(new Array(words.length).fill(""));
     setFeedback("");
     setShowFeedback(false);
-    setBackgroundImage("/assets/openbook-default.png");
+    setBackgroundImage(bookImages.default);
   };
 
   const handleWordChange = (index, value) => {
@@ -49,6 +47,7 @@ export default function Book({
     newInputs[index] = value.toLowerCase();
     setWordInputs(newInputs);
   };
+
   const checkWords = () => {
     const incorrectIndices = correctWords
       .map((word, i) => (wordInputs[i] !== word ? i : null))
@@ -58,23 +57,22 @@ export default function Book({
       setFeedback("success");
       setShowFeedback(true);
       if (typeof onCorrectGuess === "function") {
-        onCorrectGuess(); // triggers the success sound
+        onCorrectGuess();
       }
 
       const courseImageMap = {
-        appetizer: "/assets/openbook-course1.png",
-        entree: "/assets/openbook-course2.png",
-        dessert: "/assets/openbook-course3.png",
+        appetizer: bookImages.course1,
+        entree: bookImages.course2,
+        dessert: bookImages.course3,
       };
-      setBackgroundImage(
-        courseImageMap[courseType] || "/assets/openbook-default.png"
-      );
+
+      setBackgroundImage(courseImageMap[courseType] || bookImages.default);
     } else {
       const ordinalMap = ["first", "second", "third", "fourth", "fifth"];
       const incorrectOrdinals = incorrectIndices.map((i) => ordinalMap[i]);
       setFeedback(`incorrect:${incorrectOrdinals.join(", ")}`);
       setShowFeedback(true);
-      setBackgroundImage("/assets/openbook-rejected.png"); // optional: add rejection feedback
+      setBackgroundImage(bookImages.rejected);
       if (typeof onIncorrectGuess === "function") {
         onIncorrectGuess();
       }
@@ -136,8 +134,7 @@ export default function Book({
           {feedback.startsWith("incorrect:") && showFeedback && (
             <div style={styles.feedbackClose}>
               Your <strong>{feedback.split(":")[1]}</strong> word
-              {feedback.split(":")[1].includes(",") ? "s are" : " is"}{" "}
-              incorrect.
+              {feedback.split(":")[1].includes(",") ? "s are" : " is"} incorrect.
             </div>
           )}
 

@@ -11,7 +11,7 @@ export default function Congrats() {
       height: '100vh',
       flexDirection: 'column'
     }}>
-      <h1>Congrats! You have learned a bit about me and escaped the kitchen...</h1>
+      <h1>You've escaped the kitchen room! Now onto the next one...</h1>
     </div>
   );
 }

@@ -3,6 +3,7 @@ import Timer from "../components/Timer";
 import Padlock from "../components/Padlock";
 import Book from "../components/Book";
 import { useNavigate } from "react-router-dom";
+import { kitchenImages, kitchenSounds } from "../asset-links.js";
 
 export default function KitchenRoom() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function KitchenRoom() {
   const [decrementTime, setDecrementTime] = useState(0);
   const [timerKey, setTimerKey] = useState(0);
   const [gameOver, setGameOver] = useState(false);
-  const successSound = new Audio("/sounds/success.mp3");
+  const successSound = new Audio(kitchenSounds.success);
   const audioRef = useRef(null);
   const musicRef = useRef(null);
 
@@ -58,7 +59,8 @@ export default function KitchenRoom() {
   console.log("Component updated");
   useEffect(() => {
     if (gameOver) {
-      const gameOverAudio = new Audio("/sounds/gameover.mp3");
+      const gameOverAudio = new Audio(kitchenSounds.gameover);
+
       gameOverAudio.volume = 1.0;
       gameOverAudio.play().catch((e) => {
         console.warn("Game over sound failed to play:", e);
@@ -66,7 +68,8 @@ export default function KitchenRoom() {
     }
   }, [gameOver]);
   useEffect(() => {
-    const seaAudio = new Audio("/sounds/sea.mp3");
+    const seaAudio = new Audio(kitchenSounds.sea);
+
     seaAudio.loop = true;
     seaAudio.volume = 0.05;
 
@@ -96,17 +99,18 @@ export default function KitchenRoom() {
     }
 
     // Map index to audio file name
+
     const audioMap = {
-      0: "/sounds/kitchen1.mp3",
-      1: "/sounds/kitchen2.mp3",
-      2: "/sounds/kitchen3.mp3",
-      3: "/sounds/kitchen4.mp3",
-      4: "/sounds/kitchen5.mp3",
-      6: "/sounds/gamsay1.mp3",
+      0: kitchenSounds.kitchen1,
+      1: kitchenSounds.kitchen2,
+      2: kitchenSounds.kitchen3,
+      3: kitchenSounds.kitchen4,
+      4: kitchenSounds.kitchen5,
+      6: kitchenSounds.gamsay1,
     };
 
     const musicMap = {
-      0: "/sounds/sea.mp3",
+      0: new Audio(kitchenSounds.sea),
     };
 
     const audioFile = audioMap[currentTextIndex];
@@ -190,7 +194,7 @@ export default function KitchenRoom() {
       <div style={styles.container}>
         {showChef && (
           <img
-            src="/assets/chef.png"
+            src={kitchenImages.chef}
             alt="Rordan Gamsey"
             style={styles.chefImage}
           />
@@ -219,7 +223,7 @@ export default function KitchenRoom() {
                 Look for the physical envelope that looks like this
               </p>
               <img
-                src="/assets/envelope.jpg"
+                src={kitchenImages.envelope}
                 alt="Envelope"
                 style={styles.envelopeImage}
               />
@@ -242,7 +246,7 @@ export default function KitchenRoom() {
     return (
       <div
         style={{
-          backgroundImage: `url("/assets/end.png")`,
+          backgroundImage: `url(${kitchenImages.end})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           height: "100%",
@@ -295,7 +299,7 @@ export default function KitchenRoom() {
           aria-label="Open padlock"
         >
           <img
-            src="/assets/padlock-icon.png"
+            src={kitchenImages.padlock}
             alt="Padlocked Door"
             style={styles.padlockIcon}
           />
@@ -313,7 +317,7 @@ export default function KitchenRoom() {
         />
       )}
       <img
-        src={"/assets/book.png"}
+        src={kitchenImages.book}
         alt="book"
         onClick={handleBookClick}
         style={styles.bookStyle}
@@ -325,7 +329,7 @@ export default function KitchenRoom() {
           setDecrementTime((prev) => prev + 1);
         }}
         onCorrectGuess={() => {
-          const successSound = new Audio("/sounds/success.mp3");
+          const successSound = new Audio(kitchenSounds.success);
           successSound.volume = 1.0;
           successSound
             .play()
@@ -333,7 +337,7 @@ export default function KitchenRoom() {
         }}
       />
       <img
-        src="/assets/hint.png"
+        src={kitchenImages.hint}
         alt="Hint Icon"
         onClick={() => {
           setShowHintModal(true);
@@ -351,7 +355,11 @@ export default function KitchenRoom() {
       />
       {showHintModal && (
         <div>
-          <img src="/assets/chef.png" alt="Chef" style={styles.hintChefImage} />
+          <img
+            src={kitchenImages.chef}
+            alt="Chef"
+            style={styles.hintChefImage}
+          />
 
           <div
             style={{
@@ -526,9 +534,9 @@ export default function KitchenRoom() {
 const styles = {
   container: {
     backgroundImage: `
-     url("/assets/kitchen.png"),
-           url("/assets/aquarium.gif")
-   `,
+            url(${kitchenImages.kitchenBg}),
+            url(${kitchenImages.aquarium})
+          `,
     /* Make sure both cover the full area and are centered */
     backgroundSize: "cover, cover",
     backgroundPosition: "center, center",

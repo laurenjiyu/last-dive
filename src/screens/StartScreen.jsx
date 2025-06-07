@@ -1,6 +1,9 @@
 import React from "react";
 import { colors } from "../theme";
 import { useNavigate } from "react-router-dom";
+import {
+  startScreenImages
+} from "../asset-links.js";
 
 export default function StartScreen() {
   const navigate = useNavigate();
@@ -24,7 +27,7 @@ export default function StartScreen() {
       </div>
 
       <img
-        src="/assets/submarine.png"
+        src={startScreenImages.submarine}
         alt="Submarine"
         style={styles.submarine}
       />
