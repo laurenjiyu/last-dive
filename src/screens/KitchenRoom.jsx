@@ -43,7 +43,7 @@ export default function KitchenRoom() {
     entree: {
       "▲": "The Goldilocks shirt size.", // Medium
       "⬟": "More valuable because I’m hardly around.", // Rare
-      "⬣": "You’ll find me in burgers and steaks. Moo.", // Beef
+      "♦": "You’ll find me in burgers and steaks. Moo.", // Beef
       "●": "Look for a common town name on the maps.", // Wellington
     },
     dessert: {
