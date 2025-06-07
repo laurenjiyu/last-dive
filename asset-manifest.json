@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/last-dive/static/css/main.1801c4d1.css",
+    "main.js": "/last-dive/static/js/main.e4943c9c.js",
+    "static/js/453.d435a6da.chunk.js": "/last-dive/static/js/453.d435a6da.chunk.js",
+    "index.html": "/last-dive/index.html",
+    "main.1801c4d1.css.map": "/last-dive/static/css/main.1801c4d1.css.map",
+    "main.e4943c9c.js.map": "/last-dive/static/js/main.e4943c9c.js.map",
+    "453.d435a6da.chunk.js.map": "/last-dive/static/js/453.d435a6da.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1801c4d1.css",
+    "static/js/main.e4943c9c.js"
+  ]
+}
